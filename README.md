@@ -1,18 +1,15 @@
-# 🧠 LLM Tokenizer from Scratch
+# 🧠 LLM do Zero (Build a Large Language Model from Scratch)
 
-Este repositório contém a implementação passo a passo de um Tokenizer construído do zero, baseado nos ensinamentos do livro **"Build a Large Language Model (From Scratch)"**.
+Este repositório contém a implementação e os estudos passo a passo baseados no livro **"Build a Large Language Model (From Scratch)"**.
 
-O objetivo deste projeto é entender a fundo a matemática e a lógica de engenharia por trás do processamento de linguagem natural (NLP), desconstruindo textos em tokens computáveis antes de alimentá-los em uma rede neural.
+O objetivo deste projeto é construir a arquitetura de um LLM desconstruindo cada etapa: desde o processamento inicial de texto (Tokenização) até a construção das camadas de Atenção e treinamento da Rede Neural utilizando PyTorch.
 
-## 🛠️ O que foi implementado
-* **Construção de Vocabulário:** Leitura de um texto base (`the-verdict.txt`) para mapeamento e extração de tokens únicos através de Expressões Regulares (Regex).
-* **Conversão Bidirecional (Encode / Decode):** 
-  * `encode`: Transforma a linguagem humana (strings) em matrizes de IDs (inteiros).
-  * `decode`: Converte o processamento da máquina (IDs) de volta para linguagem humana, mantendo a formatação e pontuação corretas.
-* **Prevenção de OOV (Out-Of-Vocabulary):** Implementação de token especial `<|unk|>` para evitar falhas (`KeyError`) quando o algoritmo esbarra em palavras desconhecidas fora de sua base de treinamento inicial.
+## 📁 Estrutura do Projeto
+* `/src`: Códigos-fonte em Python (Tokenizer, validação de ambiente, etc).
+* `/docs`: Documentação, glossários técnicos e respostas teóricas de cada capítulo.
+* `/notebooks`: Arquivos de experimentação interativa.
 
-## 🚀 Como executar
-
-1. Clone o repositório:
-```bash
-git clone [https://github.com/bezerrasz/IA-1.git](https://github.com/bezerrasz/IA-1.git)
+## 🚀 Tecnologias e Bibliotecas
+* Python 3.x
+* PyTorch
+* Expressões Regulares (re)
