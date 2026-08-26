@@ -1,47 +1,23 @@
-import re
 import torch
 from torch.utils.data import Dataset, DataLoader
 
 try:
     from .config import CORPUS_PATH, SPECIAL_TOKENS
+    from .tokenizer import SimpleTokenizerV2, build_vocab, tokenize_text
 except ImportError:  # Permite executar o arquivo diretamente a partir de src/.
     from config import CORPUS_PATH, SPECIAL_TOKENS
+    from tokenizer import SimpleTokenizerV2, build_vocab, tokenize_text
 
 # 1. Ler o texto e criar o vocabulário.
 with CORPUS_PATH.open("r", encoding="utf-8") as f:
     raw_text = f.read()
 
-# Separa todas as palavras e pontuações para extrair os tokens únicos
-preprocessed_text = re.split(r'([,.:;?_!"()\']|--|\s)', raw_text)
-preprocessed_text = [item.strip() for item in preprocessed_text if item.strip()]
+# Separa palavras, pontuação e tokens especiais para extrair os tokens únicos.
+preprocessed_text = tokenize_text(raw_text, SPECIAL_TOKENS)
 
 # Cria uma lista ordenada sem palavras repetidas e gera o dicionário
-all_tokens = sorted(list(set(preprocessed_text)))
-for special_token in SPECIAL_TOKENS:
-    if special_token not in all_tokens:
-        all_tokens.append(special_token)
-vocab = {token: integer for integer, token in enumerate(all_tokens)}
-
-# CRIAÇÃO DA CLASSE SIMPLETOKENIZERV2 
-class SimpleTokenizerV2:
-    def __init__(self, vocab):
-        self.str_to_int = vocab
-        self.int_to_str = {i: s for s, i in vocab.items()}
-    
-    def encode(self, text):
-        preprocessed = re.split(r'([,.:;?_!"()\']|--|\s)', text)
-        preprocessed = [item.strip() for item in preprocessed if item.strip()]
-        preprocessed = [
-            item if item in self.str_to_int 
-            else "<|unk|>" for item in preprocessed
-        ]
-        ids = [self.str_to_int[s] for s in preprocessed]
-        return ids
-        
-    def decode(self, ids):
-        text = " ".join([self.int_to_str[i] for i in ids])
-        text = re.sub(r'\s+([,.:;?!"()\'])', r'\1', text)
-        return text
+vocab = build_vocab(preprocessed_text, SPECIAL_TOKENS)
+all_tokens = list(vocab)
 
 # CRIAÇÃO DA CLASSE GPTDATASETV1 
 class GPTDatasetV1(Dataset):
