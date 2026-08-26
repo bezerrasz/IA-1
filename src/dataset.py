@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Protocol
+from typing import Protocol
 
 import torch
 from torch.utils.data import Dataset
