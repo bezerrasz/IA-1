@@ -8,6 +8,7 @@ sys.path.append(caminho_src)
 import torch
 from tokeniz import raw_text, vocab, SimpleTokenizerV2, create_dataloader_v1
 from config import DEFAULT_CONFIG
+from embeddings import InputEmbedding
 
 # INICIALIZAÇÃO DO TOKENIZER 
 tokenizer = SimpleTokenizerV2(vocab)
@@ -44,14 +45,9 @@ vocab_size = len(vocab)
 embedding_dim = DEFAULT_CONFIG.embedding_dim
 context_length = max_length
 
-# CRIANDO AS CAMADAS 
-token_embedding_layer = torch.nn.Embedding(vocab_size, embedding_dim)
-pos_embedding_layer = torch.nn.Embedding(context_length, embedding_dim)
-
-# CRIANDO OS EMBEDDINGS
-tok_embeddings = token_embedding_layer(inputs)
-pos_embeddings = pos_embedding_layer(torch.arange(context_length))
-input_embeddings = tok_embeddings + pos_embeddings
+# CRIANDO OS EMBEDDINGS E POSITIONS EMBEDDINGS
+input_embedding_layer = InputEmbedding(vocab_size, context_length, embedding_dim)
+input_embeddings = input_embedding_layer(inputs)
 
 #TESTE DO EMBEDDING
 print(input_embeddings.shape)
