@@ -7,6 +7,7 @@ sys.path.append(caminho_src)
 
 import torch
 from tokeniz import raw_text, vocab, SimpleTokenizerV2, create_dataloader_v1
+from config import DEFAULT_CONFIG
 
 # INICIALIZAÇÃO DO TOKENIZER 
 tokenizer = SimpleTokenizerV2(vocab)
@@ -21,8 +22,16 @@ print(tokenizer.encode(text))
 print(tokenizer.decode(tokenizer.encode(text)))
 
 # CRIANDO O DATALOADER 
-max_length = 4 
-dataloader = create_dataloader_v1(raw_text, tokenizer, batch_size=8, max_length=max_length, stride=max_length, shuffle=False)
+max_length = DEFAULT_CONFIG.context_length
+dataloader = create_dataloader_v1(
+    raw_text,
+    tokenizer,
+    batch_size=DEFAULT_CONFIG.batch_size,
+    max_length=max_length,
+    stride=DEFAULT_CONFIG.stride,
+    shuffle=DEFAULT_CONFIG.shuffle,
+    drop_last=DEFAULT_CONFIG.drop_last,
+)
 data_iter = iter(dataloader)
 inputs, targets = next(data_iter)
 
@@ -32,7 +41,7 @@ print(targets)
 
 # DEFINIDO O TAMANHO DO VOCABULÁRIO 
 vocab_size = len(vocab)
-embedding_dim = 256     
+embedding_dim = DEFAULT_CONFIG.embedding_dim
 context_length = max_length
 
 # CRIANDO AS CAMADAS 

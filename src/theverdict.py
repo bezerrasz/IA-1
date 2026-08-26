@@ -1,23 +1,25 @@
-import os
 import re
 import requests
 
+try:
+    from .config import CORPUS_PATH
+except ImportError:  # Permite executar o arquivo diretamente a partir de src/.
+    from config import CORPUS_PATH
+
 # IMPORTAÇÃO/DOWNLOAD DO TEXTO 
-if not os.path.exists("the-verdict.txt"):
+if not CORPUS_PATH.exists():
     url = (
         "https://raw.githubusercontent.com/rasbt/"
         "LLMs-from-scratch/main/ch02/01_main-chapter-code/"
         "the-verdict.txt"
     )
-    file_path = "the-verdict.txt"
-
     response = requests.get(url, timeout=30)
     response.raise_for_status()
-    with open(file_path, "wb") as f:
+    with CORPUS_PATH.open("wb") as f:
         f.write(response.content)
 
 # ABERTURA DO ARQUIVO 
-with open("the-verdict.txt", "r", encoding="utf-8") as f:
+with CORPUS_PATH.open("r", encoding="utf-8") as f:
     raw_text = f.read()
 
 # NUMERO TOTAL DE CARACTERES E PRIMEIROS 100 CARACTERES DO TEXTO 

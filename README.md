@@ -13,3 +13,17 @@ O objetivo deste projeto é construir a arquitetura de um LLM desconstruindo cad
 * Python 3.x
 * PyTorch
 * Expressões Regulares (re)
+
+## 🛠️ Preparação do ambiente
+
+Com Python 3 instalado, instale as dependências do projeto:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+O corpus de desenvolvimento da Sprint 2 é `the-verdict.txt`. Os caminhos e
+parâmetros padrão dos experimentos ficam centralizados em `src/config.py`.
+
+O escopo e a ordem de implementação da Sprint 2 estão documentados em
+[`docs/sprint2.md`](docs/sprint2.md).

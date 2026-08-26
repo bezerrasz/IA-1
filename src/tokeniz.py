@@ -1,13 +1,14 @@
 import re
-import os
 import torch
 from torch.utils.data import Dataset, DataLoader
 
-# 1. LER O TEXTO E CRIAR O VOCABULÁRIO (O passo que estava faltando)
-diretorio_atual = os.path.dirname(__file__)
-caminho_texto = os.path.join(diretorio_atual, "..", "the-verdict.txt")
+try:
+    from .config import CORPUS_PATH, SPECIAL_TOKENS
+except ImportError:  # Permite executar o arquivo diretamente a partir de src/.
+    from config import CORPUS_PATH, SPECIAL_TOKENS
 
-with open(caminho_texto, "r", encoding="utf-8") as f:
+# 1. Ler o texto e criar o vocabulário.
+with CORPUS_PATH.open("r", encoding="utf-8") as f:
     raw_text = f.read()
 
 # Separa todas as palavras e pontuações para extrair os tokens únicos
@@ -16,7 +17,9 @@ preprocessed_text = [item.strip() for item in preprocessed_text if item.strip()]
 
 # Cria uma lista ordenada sem palavras repetidas e gera o dicionário
 all_tokens = sorted(list(set(preprocessed_text)))
-all_tokens.extend(["<|endoftext|>", "<|unk|>"])
+for special_token in SPECIAL_TOKENS:
+    if special_token not in all_tokens:
+        all_tokens.append(special_token)
 vocab = {token: integer for integer, token in enumerate(all_tokens)}
 
 # CRIAÇÃO DA CLASSE SIMPLETOKENIZERV2 
