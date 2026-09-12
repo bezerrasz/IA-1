@@ -1,0 +1,16 @@
+# Glossário - Capítulo 3: Mecanismos de Atenção
+
+Este documento consolida os principais conceitos abordados no Capítulo 3 da implementação do nosso modelo (Self-Attention, Causal Attention e Multi-Head Attention).
+
+* **Self-Attention (Auto-Atenção):** É o mecanismo principal dos Transformers. Ele permite que o modelo calcule a importância de cada palavra (token) em relação a todas as outras palavras da mesma frase, gerando um contexto global sem depender de processamento sequencial (como nas antigas RNNs).
+* **Query (Consulta - Q):** Representa o que um token está "procurando" no resto da frase para entender seu próprio significado.
+* **Key (Chave - K):** Funciona como um "crachá" ou identificador do token. As Queries avaliam essas Keys para ver se há um "match" (afinidade).
+* **Value (Valor - V):** É o conteúdo ou significado semântico real do token. Se a Query de uma palavra der "match" com a Key de outra, é o Value dessa segunda palavra que será extraído.
+* **Weight Parameters (Parâmetros de Peso - W_q, W_k, W_v):** São as matrizes matemáticas treináveis da rede neural (implementadas via `nn.Linear`). Elas convertem os embeddings originais das palavras nas Queries, Keys e Values. Estes são os valores que o modelo de fato otimiza durante o aprendizado.
+* **Attention Scores (Pontuações de Atenção):** O resultado da multiplicação (produto escalar) entre as Queries e as Keys. Representa o valor bruto da afinidade entre duas palavras.
+* **Scaled Dot-Product Attention (Atenção de Produto Escalar Escalado):** Uma etapa de segurança matemática onde dividimos os *Attention Scores* pela raiz quadrada do tamanho das chaves. Isso evita que os números fiquem gigantes e "quebrem" o treinamento da rede neural.
+* **Attention Weights (Pesos de Atenção):** São os *Attention Scores* após passarem pela função Softmax. Eles transformam as pontuações brutas em porcentagens (de 0.0 a 1.0), distribuindo 100% da atenção de uma palavra entre as outras.
+* **Context Vector (Vetor de Contexto):** O resultado final do bloco de atenção para uma palavra. É a soma dos *Values* multiplicados pelos *Attention Weights*. Esse novo vetor substitui o embedding original, agora enriquecido com o contexto da frase inteira.
+* **Causal Attention (Atenção Causal / Mascarada):** Uma modificação essencial para modelos geradores de texto (como o GPT). Utiliza uma máscara (matriz triangular) para ocultar as palavras futuras. Isso impede que o modelo "trapaceie" olhando para a frente enquanto tenta prever a próxima palavra.
+* **Dropout:** Uma técnica de regularização que "desliga" conexões aleatoriamente (ex: 50% dos neurônios) durante o treinamento. Isso impede que o modelo decore os dados (overfitting) e o força a generalizar o aprendizado.
+* **Multi-Head Attention (Atenção Multi-Cabeças):** Uma arquitetura que divide o mecanismo de atenção em várias "cabeças" paralelas. Isso permite que a Inteligência Artificial preste atenção em diferentes tipos de relações ao mesmo tempo (por exemplo, uma cabeça pode focar na gramática da frase, enquanto outra foca nas emoções das palavras).
