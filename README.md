@@ -1,70 +1,39 @@
 # 🧠 LLM do Zero (Build a Large Language Model from Scratch)
 
-Este repositório contém a implementação e os estudos passo a passo baseados no livro **"Build a Large Language Model (From Scratch)"**.
+Este repositório contém a implementação e os estudos passo a passo baseados no livro **"Build a Large Language Model (From Scratch)"** de Sebastian Raschka.
 
-O objetivo deste projeto é construir a arquitetura de um LLM desconstruindo cada etapa: desde o processamento inicial de texto (Tokenização) até a construção das camadas de Atenção e treinamento da Rede Neural utilizando PyTorch.
+O objetivo deste projeto é construir a arquitetura de uma LLM desconstruindo cada etapa: desde o processamento inicial de texto (Tokenização) até a construção das camadas de Atenção e treinamento da Rede Neural utilizando PyTorch.
 
 ## 📁 Estrutura do Projeto
-* `/src`: Códigos-fonte em Python (Tokenizer, validação de ambiente, etc).
-* `/docs`: Documentação, glossários técnicos e respostas teóricas de cada capítulo.
-* `/notebooks`: Arquivos de experimentação interativa.
-* `/experiments`: Scripts reproduzíveis e resultados dos experimentos.
-* `/tests`: Testes automatizados dos componentes.
+
+A arquitetura do projeto foi simplificada para centralizar a lógica e facilitar a visualização dos experimentos teóricos:
+
+* `/src`: Motores lógicos e arquitetura do modelo.
+  * `theverdict.py`: Download e validação do corpus de treinamento.
+  * `tokeniz.py`: Processamento de texto, vocabulário, classes do Tokenizer e DataLoader (Capítulo 2).
+  * `attention.py`: Implementação matemática das classes de Self-Attention, Causal Attention e Multi-Head Attention (Capítulo 3).
+* `/notebooks`: Ambiente interativo de testes.
+  * `notebook.py`: Script central que importa os módulos do `src` e gera os relatórios de execução passo a passo.
+* `/docs`: Documentação técnica e conceitos teóricos.
+  * Documentos e glossários divididos por capítulo (Capítulo 1, Capítulo 2 e Capítulo 3).
 
 ## 🚀 Tecnologias e Bibliotecas
+
 * Python 3.x
-* PyTorch
-* Expressões Regulares (re)
+* PyTorch (`torch`)
+* Requests (`requests`)
+* Expressões Regulares (`re`)
 
-## 🛠️ Preparação do ambiente
+## 🛠️ Preparação do Ambiente
 
-Com Python 3 instalado, instale as dependências do projeto:
+Para rodar o projeto do zero, crie um ambiente virtual e instale as dependências básicas:
 
 ```bash
-python -m pip install -r requirements.txt
-```
-
-O corpus de desenvolvimento da Sprint 2 é `the-verdict.txt`. Os caminhos e
-parâmetros padrão dos experimentos ficam centralizados em `src/config.py`.
-
-O escopo e a ordem de implementação da Sprint 2 estão documentados em
-[`docs/sprint2.md`](docs/sprint2.md).
-
-## ▶️ Execução da Sprint 2
-
-Na primeira execução, crie um ambiente virtual e instale as dependências:
-
-```powershell
+# Criação do ambiente virtual
 python -m venv .venv
-.venv\Scripts\python.exe -m pip install -r requirements.txt
-```
 
-Execute os testes automatizados:
+# Ativação (Windows)
+.\.venv\Scripts\activate
 
-```powershell
-.venv\Scripts\python.exe -m unittest discover -s tests -v
-```
-
-Execute o experimento completo e gere o relatório:
-
-```powershell
-.venv\Scripts\python.exe experiments\sprint2_experimentos.py
-```
-
-O notebook de demonstração do pipeline pode ser executado com:
-
-```powershell
-.venv\Scripts\python.exe notebooks\notebook.py
-```
-
-## ✅ Entregáveis da Sprint 2
-
-- Leitura orientada do Capítulo 2 em `docs/leitura_orientada_capitulo2.md`;
-- Glossário técnico atualizado em `docs/glossario_capitulo2.md`;
-- Tokenização, vocabulário e Token IDs em `src/tokenizer.py`;
-- Sequências de treinamento em `src/dataset.py`;
-- Embeddings e Positional Embeddings em `src/embeddings.py`;
-- Dataset e DataLoader em `src/dataloader.py`;
-- Experimentos e resultados em `experiments/` e `docs/resultados_experimentos_sprint2.md`;
-- Análise técnica em `docs/analise_resultados_sprint2.md`;
-- Compatibilidade preservada pelo módulo legado `src/tokeniz.py`.
+# Instalação das bibliotecas necessárias
+pip install torch requests
