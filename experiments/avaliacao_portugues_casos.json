@@ -1,0 +1,1142 @@
+[
+  {
+    "intent": "base_48",
+    "question": "por favor, responda: o que é uma função de perda?",
+    "answer": "a função de perda mede a diferença entre a previsão do modelo e o resultado esperado. o treinamento tenta reduzir essa diferença."
+  },
+  {
+    "intent": "soma_6_1",
+    "question": "por favor, responda: quanto é 6+1?",
+    "answer": "7."
+  },
+  {
+    "intent": "base_94",
+    "question": "por favor, responda: por que não usar só os resultados de treino?",
+    "answer": "resultados de treino mostram o ajuste aos exemplos apresentados. exemplos separados ajudam a verificar se o comportamento se mantém em outros textos."
+  },
+  {
+    "intent": "soma_5_3",
+    "question": "por favor, responda: quanto é 5+3?",
+    "answer": "8."
+  },
+  {
+    "intent": "soma_2_3",
+    "question": "por favor, responda: quanto é 2+3?",
+    "answer": "5."
+  },
+  {
+    "intent": "soma_3_2",
+    "question": "por favor, responda: quanto é 3+2?",
+    "answer": "5."
+  },
+  {
+    "intent": "soma_1_1",
+    "question": "por favor, responda: quanto é 1+1?",
+    "answer": "2."
+  },
+  {
+    "intent": "soma_4_0",
+    "question": "por favor, responda: quanto é 4+0?",
+    "answer": "4."
+  },
+  {
+    "intent": "soma_3_9",
+    "question": "por favor, responda: quanto é 3+9?",
+    "answer": "12."
+  },
+  {
+    "intent": "base_73",
+    "question": "por favor, responda: o que é um tensor?",
+    "answer": "um tensor organiza valores em dimensões. uma sequência de lotes e vetores pode ser representada por um tensor."
+  },
+  {
+    "intent": "soma_0_4",
+    "question": "por favor, responda: quanto é 0+4?",
+    "answer": "4."
+  },
+  {
+    "intent": "base_95",
+    "question": "por favor, responda: como guardar o resultado do projeto?",
+    "answer": "guarde o código, a documentação e os relatórios no repositório. mantenha os pesos treinados em arquivos identificados."
+  },
+  {
+    "intent": "direto",
+    "question": "por favor, responda: cara, fala direto",
+    "answer": "certo. vou responder de forma curta."
+  },
+  {
+    "intent": "soma_6_5",
+    "question": "por favor, responda: quanto é 6+5?",
+    "answer": "11."
+  },
+  {
+    "intent": "soma_9_0",
+    "question": "por favor, responda: quanto é 9+0?",
+    "answer": "9."
+  },
+  {
+    "intent": "base_66",
+    "question": "por favor, responda: por que fazer testes?",
+    "answer": "os testes verificam se o programa apresenta o comportamento esperado. eles ajudam a encontrar erros após mudanças no código."
+  },
+  {
+    "intent": "soma_3_4",
+    "question": "por favor, responda: quanto é 3+4?",
+    "answer": "7."
+  },
+  {
+    "intent": "estado",
+    "question": "por favor, responda: como está?",
+    "answer": "estou pronto para ajudar. como posso ajudar você?"
+  },
+  {
+    "intent": "base_83",
+    "question": "por favor, responda: escreva uma frase sobre colaboração",
+    "answer": "um grupo aprende melhor quando compartilha dúvidas, testa suas ideias e registra as decisões do projeto."
+  },
+  {
+    "intent": "atencao",
+    "question": "qual é a função da atenção?",
+    "answer": "a atenção combina informações dos tokens do contexto."
+  },
+  {
+    "intent": "limites",
+    "question": "posso confiar em todas as suas respostas?",
+    "answer": "sou um modelo pequeno e posso errar. confira as respostas."
+  },
+  {
+    "intent": "base_42",
+    "question": "por favor, responda: o que é seleção greedy?",
+    "answer": "a seleção greedy escolhe o token com maior escore a cada passo. ela pode produzir respostas repetitivas."
+  },
+  {
+    "intent": "despedida",
+    "question": "por favor, responda: tchau",
+    "answer": "até logo! bons estudos."
+  },
+  {
+    "intent": "base_18",
+    "question": "por favor, responda: o que é um modelo de linguagem?",
+    "answer": "um modelo de linguagem aprende padrões em textos para prever o próximo token de uma sequência."
+  },
+  {
+    "intent": "base_104",
+    "question": "por favor, responda: o que acontece quando eu escrevo uma pergunta?",
+    "answer": "o programa transforma a pergunta em tokens, executa o modelo e gera a resposta usando os pesos salvos."
+  },
+  {
+    "intent": "base_22",
+    "question": "por favor, responda: para que serve o tokenizador?",
+    "answer": "o tokenizador divide o texto em unidades e transforma essas unidades em identificadores numéricos."
+  },
+  {
+    "intent": "base_58",
+    "question": "por favor, responda: como faço para usar os pesos salvos?",
+    "answer": "carregue o checkpoint correspondente ao idioma e execute a geração com o vocabulário salvo junto com o modelo."
+  },
+  {
+    "intent": "base_106",
+    "question": "por favor, responda: você pode ajudar nos estudos de inteligência artificial?",
+    "answer": "posso tentar produzir explicações simples sobre o projeto. confira as respostas com os materiais de estudo e os testes."
+  },
+  {
+    "intent": "soma_4_3",
+    "question": "por favor, responda: quanto é 4+3?",
+    "answer": "7."
+  },
+  {
+    "intent": "soma_6_3",
+    "question": "por favor, responda: quanto é 6+3?",
+    "answer": "9."
+  },
+  {
+    "intent": "base_107",
+    "question": "por favor, responda: qual é a diferença entre treinar e gerar texto?",
+    "answer": "treinar ajusta os pesos usando exemplos. gerar texto utiliza os pesos já salvos para escolher novos tokens."
+  },
+  {
+    "intent": "confirmacao",
+    "question": "por favor, responda: ok",
+    "answer": "certo. pode perguntar."
+  },
+  {
+    "intent": "soma_2_2",
+    "question": "por favor, responda: quanto é 2+2?",
+    "answer": "4."
+  },
+  {
+    "intent": "base_51",
+    "question": "por favor, responda: para que serve o otimizador?",
+    "answer": "o otimizador atualiza os parâmetros do modelo a partir dos gradientes e da taxa de aprendizado."
+  },
+  {
+    "intent": "soma_6_6",
+    "question": "por favor, responda: quanto é 6+6?",
+    "answer": "12."
+  },
+  {
+    "intent": "base_39",
+    "question": "por favor, responda: o que é geração autorregressiva?",
+    "answer": "é a geração em que cada token novo depende do contexto formado pelos tokens anteriores."
+  },
+  {
+    "intent": "soma_7_9",
+    "question": "por favor, responda: quanto é 7+9?",
+    "answer": "16."
+  },
+  {
+    "intent": "base_110",
+    "question": "por favor, responda: como saber se o modelo melhorou?",
+    "answer": "compare as perdas em exemplos separados e examine as respostas geradas. uma única resposta não resume a qualidade do modelo."
+  },
+  {
+    "intent": "soma_2_5",
+    "question": "por favor, responda: quanto é 2+5?",
+    "answer": "7."
+  },
+  {
+    "intent": "soma_4_6",
+    "question": "por favor, responda: quanto é 4+6?",
+    "answer": "10."
+  },
+  {
+    "intent": "soma_4_7",
+    "question": "por favor, responda: quanto é 4+7?",
+    "answer": "11."
+  },
+  {
+    "intent": "ajuda",
+    "question": "quero ajuda com meus estudos",
+    "answer": "escreva uma pergunta sobre estudos ou sobre o projeto."
+  },
+  {
+    "intent": "soma_6_2",
+    "question": "por favor, responda: quanto é 6+2?",
+    "answer": "8."
+  },
+  {
+    "intent": "base_35",
+    "question": "por favor, responda: o que é dropout?",
+    "answer": "dropout desativa parte das ativações durante o treinamento. na avaliação, ele fica desativado para permitir previsões estáveis."
+  },
+  {
+    "intent": "checkpoint",
+    "question": "por favor, responda: o que é um checkpoint?",
+    "answer": "um checkpoint salva os pesos, a configuração e o vocabulário."
+  },
+  {
+    "intent": "soma_1_2",
+    "question": "por favor, responda: quanto é 1+2?",
+    "answer": "3."
+  },
+  {
+    "intent": "soma_5_5",
+    "question": "por favor, responda: quanto é 5+5?",
+    "answer": "10."
+  },
+  {
+    "intent": "base_71",
+    "question": "por favor, responda: o que é pytorch?",
+    "answer": "pytorch é uma biblioteca que oferece tensores, cálculo de gradientes e componentes para construir redes neurais."
+  },
+  {
+    "intent": "epoca",
+    "question": "o que é uma época de treinamento?",
+    "answer": "uma época é uma passagem pelas amostras de treinamento."
+  },
+  {
+    "intent": "soma_7_8",
+    "question": "por favor, responda: quanto é 7+8?",
+    "answer": "15."
+  },
+  {
+    "intent": "base_50",
+    "question": "por favor, responda: o que são gradientes?",
+    "answer": "gradientes indicam como pequenas mudanças nos parâmetros afetam a perda. o otimizador usa essa informação para ajustar os pesos."
+  },
+  {
+    "intent": "soma_9_5",
+    "question": "por favor, responda: quanto é 9+5?",
+    "answer": "14."
+  },
+  {
+    "intent": "soma_9_3",
+    "question": "por favor, responda: quanto é 9+3?",
+    "answer": "12."
+  },
+  {
+    "intent": "soma_1_7",
+    "question": "por favor, responda: quanto é 1+7?",
+    "answer": "8."
+  },
+  {
+    "intent": "base_102",
+    "question": "por favor, responda: como melhorar a organização dos estudos?",
+    "answer": "separe os assuntos em etapas, faça revisões e registre as dúvidas. pequenos testes ajudam a verificar o que foi aprendido."
+  },
+  {
+    "intent": "base_78",
+    "question": "por favor, responda: por que usar dados em português?",
+    "answer": "para aprender padrões do português, o modelo precisa receber exemplos nesse idioma durante o treinamento."
+  },
+  {
+    "intent": "base_60",
+    "question": "por favor, responda: por que as respostas se repetem?",
+    "answer": "um modelo pequeno pode aprender padrões repetitivos. poucos dados e a estratégia de seleção dos tokens podem contribuir para esse resultado."
+  },
+  {
+    "intent": "soma_8_4",
+    "question": "por favor, responda: quanto é 8+4?",
+    "answer": "12."
+  },
+  {
+    "intent": "base_72",
+    "question": "por favor, responda: o que é uma matriz?",
+    "answer": "uma matriz organiza valores em linhas e colunas. operações com matrizes aparecem em várias partes do modelo."
+  },
+  {
+    "intent": "soma_8_1",
+    "question": "por favor, responda: quanto é 8+1?",
+    "answer": "9."
+  },
+  {
+    "intent": "soma_2_6",
+    "question": "por favor, responda: quanto é 2+6?",
+    "answer": "8."
+  },
+  {
+    "intent": "soma_5_7",
+    "question": "por favor, responda: quanto é 5+7?",
+    "answer": "12."
+  },
+  {
+    "intent": "base_65",
+    "question": "por favor, responda: como organizar uma tarefa?",
+    "answer": "divida a tarefa em etapas pequenas, defina a ordem de execução e verifique o resultado de cada etapa."
+  },
+  {
+    "intent": "soma_5_8",
+    "question": "por favor, responda: quanto é 5+8?",
+    "answer": "13."
+  },
+  {
+    "intent": "base_81",
+    "question": "por favor, responda: você consegue escrever uma história?",
+    "answer": "uma estudante abriu o caderno e organizou suas ideias. depois estudou o projeto com calma e escreveu o que havia aprendido."
+  },
+  {
+    "intent": "base_20",
+    "question": "por favor, responda: o que significa gpt?",
+    "answer": "gpt significa transformer generativo pré-treinado. a arquitetura prevê tokens usando o contexto disponível."
+  },
+  {
+    "intent": "base_64",
+    "question": "por favor, responda: como posso estudar melhor?",
+    "answer": "organize os assuntos, faça pequenas revisões e resolva exercícios. explique com suas palavras o que aprendeu."
+  },
+  {
+    "intent": "base_116",
+    "question": "por favor, responda: como o programa escolhe a próxima palavra?",
+    "answer": "o modelo produz escores para os tokens do vocabulário. o programa seleciona um token e o acrescenta ao contexto."
+  },
+  {
+    "intent": "soma_3_0",
+    "question": "por favor, responda: quanto é 3+0?",
+    "answer": "3."
+  },
+  {
+    "intent": "base_34",
+    "question": "por favor, responda: o que é gelu?",
+    "answer": "gelu é uma função de ativação usada na rede feedforward. ela introduz uma transformação não linear suave."
+  },
+  {
+    "intent": "base_53",
+    "question": "por favor, responda: por que separar treino e validação?",
+    "answer": "o treino ajusta os pesos. a validação acompanha o comportamento em exemplos separados e ajuda a escolher o checkpoint."
+  },
+  {
+    "intent": "identidade",
+    "question": "me conte quem é você",
+    "answer": "sou um modelo de linguagem didático do projeto da faculdade."
+  },
+  {
+    "intent": "base_87",
+    "question": "por favor, responda: por que registrar a configuração?",
+    "answer": "registrar os parâmetros e a origem dos dados ajuda a repetir o experimento e a comparar os resultados."
+  },
+  {
+    "intent": "epoca",
+    "question": "por favor, responda: o que é uma época?",
+    "answer": "uma época é uma passagem pelas amostras de treinamento."
+  },
+  {
+    "intent": "base_32",
+    "question": "por favor, responda: para que serve a conexão residual?",
+    "answer": "a conexão residual soma a entrada ao resultado de uma transformação. ela ajuda a preservar informações e facilita o fluxo dos gradientes."
+  },
+  {
+    "intent": "soma_5_6",
+    "question": "por favor, responda: quanto é 5+6?",
+    "answer": "11."
+  },
+  {
+    "intent": "soma_0_7",
+    "question": "por favor, responda: quanto é 0+7?",
+    "answer": "7."
+  },
+  {
+    "intent": "soma_1_9",
+    "question": "por favor, responda: quanto é 1+9?",
+    "answer": "10."
+  },
+  {
+    "intent": "ajuda",
+    "question": "por favor, responda: pode me ajudar?",
+    "answer": "escreva uma pergunta sobre estudos ou sobre o projeto."
+  },
+  {
+    "intent": "base_80",
+    "question": "por favor, responda: o que você aprendeu neste projeto?",
+    "answer": "o treinamento ajustou meus pesos com pequenos exemplos em português. isso permite demonstrar o fluxo de geração de respostas."
+  },
+  {
+    "intent": "base_29",
+    "question": "por favor, responda: o que é atenção com várias cabeças?",
+    "answer": "a atenção com várias cabeças divide a representação em partes e calcula relações em diferentes espaços. depois reúne os resultados."
+  },
+  {
+    "intent": "soma_3_1",
+    "question": "por favor, responda: quanto é 3+1?",
+    "answer": "4."
+  },
+  {
+    "intent": "base_26",
+    "question": "por favor, responda: para que servem os embeddings posicionais?",
+    "answer": "os embeddings posicionais informam a posição de cada token. a ordem das palavras é importante para interpretar uma frase."
+  },
+  {
+    "intent": "base_59",
+    "question": "por favor, responda: o modelo aprende enquanto conversamos?",
+    "answer": "nesta implementação, conversar apenas executa a geração. os pesos mudam quando o programa de treinamento é executado."
+  },
+  {
+    "intent": "soma_1_4",
+    "question": "por favor, responda: quanto é 1+4?",
+    "answer": "5."
+  },
+  {
+    "intent": "base_47",
+    "question": "por favor, responda: para que serve o dataloader?",
+    "answer": "o dataloader entrega as amostras em lotes e pode embaralhar a ordem das amostras de treinamento."
+  },
+  {
+    "intent": "base_4",
+    "question": "por favor, responda: boa tarde",
+    "answer": "boa tarde! posso ajudar com uma explicação simples sobre o projeto."
+  },
+  {
+    "intent": "soma_7_7",
+    "question": "por favor, responda: quanto é 7+7?",
+    "answer": "14."
+  },
+  {
+    "intent": "soma_1_0",
+    "question": "por favor, responda: quanto é 1+0?",
+    "answer": "1."
+  },
+  {
+    "intent": "base_36",
+    "question": "por favor, responda: o que são logits?",
+    "answer": "logits são os escores produzidos pelo modelo para cada token do vocabulário. a função softmax pode transformar esses escores em probabilidades."
+  },
+  {
+    "intent": "base_97",
+    "question": "por favor, responda: por que o modelo precisa de exemplos?",
+    "answer": "os exemplos fornecem sequências de entrada e alvos. o modelo ajusta seus parâmetros usando as relações presentes nesses dados."
+  },
+  {
+    "intent": "base_77",
+    "question": "por favor, responda: posso treinar com outro texto?",
+    "answer": "sim. um novo texto pode ser usado para criar outro vocabulário e outro conjunto de exemplos. salve os novos pesos em um arquivo separado."
+  },
+  {
+    "intent": "base_57",
+    "question": "por favor, responda: por que salvar o vocabulário?",
+    "answer": "cada identificador precisa continuar representando o mesmo token. mudar o vocabulário altera o significado dos índices usados pelo modelo."
+  },
+  {
+    "intent": "soma_5_2",
+    "question": "por favor, responda: quanto é 5+2?",
+    "answer": "7."
+  },
+  {
+    "intent": "soma_0_1",
+    "question": "por favor, responda: quanto é 0+1?",
+    "answer": "1."
+  },
+  {
+    "intent": "base_114",
+    "question": "por favor, responda: o que preciso registrar no relatório?",
+    "answer": "registre o corpus, a configuração, as perdas, os exemplos gerados e as limitações observadas durante o experimento."
+  },
+  {
+    "intent": "base_108",
+    "question": "por favor, responda: como preservar o modelo em inglês?",
+    "answer": "use arquivos diferentes para os checkpoints de cada idioma. cada arquivo deve guardar os pesos e o vocabulário correspondentes."
+  },
+  {
+    "intent": "base_98",
+    "question": "por favor, responda: como usar o modo interativo?",
+    "answer": "escreva uma pergunta no terminal e espere a geração da resposta. para encerrar, use o comando de saída indicado pelo programa."
+  },
+  {
+    "intent": "capacidade",
+    "question": "por favor, responda: o que você pode fazer?",
+    "answer": "posso ajudar com explicações simples sobre estudos e o projeto."
+  },
+  {
+    "intent": "soma_6_4",
+    "question": "por favor, responda: quanto é 6+4?",
+    "answer": "10."
+  },
+  {
+    "intent": "soma_3_6",
+    "question": "por favor, responda: quanto é 3+6?",
+    "answer": "9."
+  },
+  {
+    "intent": "base_101",
+    "question": "por favor, responda: o que posso fazer quando uma resposta está errada?",
+    "answer": "registre a pergunta e a resposta, verifique os dados de treinamento e analise a limitação antes de alterar a configuração."
+  },
+  {
+    "intent": "base_52",
+    "question": "por favor, responda: o que é taxa de aprendizado?",
+    "answer": "a taxa de aprendizado controla o tamanho das atualizações dos parâmetros. seu valor influencia a velocidade e a estabilidade do treinamento."
+  },
+  {
+    "intent": "soma_2_8",
+    "question": "por favor, responda: quanto é 2+8?",
+    "answer": "10."
+  },
+  {
+    "intent": "base_68",
+    "question": "por favor, responda: como apresentar um experimento?",
+    "answer": "registre a configuração, os dados utilizados, os resultados observados e uma análise das limitações."
+  },
+  {
+    "intent": "soma_8_5",
+    "question": "por favor, responda: quanto é 8+5?",
+    "answer": "13."
+  },
+  {
+    "intent": "soma_7_6",
+    "question": "por favor, responda: quanto é 7+6?",
+    "answer": "13."
+  },
+  {
+    "intent": "base_38",
+    "question": "por favor, responda: como o modelo gera uma frase?",
+    "answer": "o modelo prevê um token, acrescenta esse token ao contexto e repete o processo até atingir o limite ou gerar o marcador de fim."
+  },
+  {
+    "intent": "base_70",
+    "question": "por favor, responda: o que é python?",
+    "answer": "python é uma linguagem de programação usada neste projeto para organizar dados e implementar o modelo."
+  },
+  {
+    "intent": "base_40",
+    "question": "por favor, responda: para que serve a temperatura?",
+    "answer": "a temperatura controla a concentração das probabilidades na amostragem. ela pode mudar a variedade do texto gerado."
+  },
+  {
+    "intent": "soma_8_3",
+    "question": "por favor, responda: quanto é 8+3?",
+    "answer": "11."
+  },
+  {
+    "intent": "soma_5_0",
+    "question": "por favor, responda: quanto é 5+0?",
+    "answer": "5."
+  },
+  {
+    "intent": "soma_4_4",
+    "question": "por favor, responda: quanto é 4+4?",
+    "answer": "8."
+  },
+  {
+    "intent": "base_91",
+    "question": "por favor, responda: o que muda quando usamos mais blocos?",
+    "answer": "mais blocos acrescentam parâmetros e etapas de processamento. isso aumenta a capacidade do modelo e também seu custo de execução."
+  },
+  {
+    "intent": "soma_6_0",
+    "question": "por favor, responda: quanto é 6+0?",
+    "answer": "6."
+  },
+  {
+    "intent": "cumprimento",
+    "question": "por favor, responda: oi",
+    "answer": "olá! tudo bem. como posso ajudar?"
+  },
+  {
+    "intent": "treinamento",
+    "question": "por favor, responda: o que é treinamento?",
+    "answer": "treinar é ajustar os pesos usando exemplos para reduzir o erro."
+  },
+  {
+    "intent": "soma_0_8",
+    "question": "por favor, responda: quanto é 0+8?",
+    "answer": "8."
+  },
+  {
+    "intent": "soma_7_4",
+    "question": "por favor, responda: quanto é 7+4?",
+    "answer": "11."
+  },
+  {
+    "intent": "soma_6_9",
+    "question": "por favor, responda: quanto é 6+9?",
+    "answer": "15."
+  },
+  {
+    "intent": "soma_6_7",
+    "question": "por favor, responda: quanto é 6+7?",
+    "answer": "13."
+  },
+  {
+    "intent": "soma_2_9",
+    "question": "por favor, responda: quanto é 2+9?",
+    "answer": "11."
+  },
+  {
+    "intent": "soma_7_1",
+    "question": "por favor, responda: quanto é 7+1?",
+    "answer": "8."
+  },
+  {
+    "intent": "soma_2_0",
+    "question": "por favor, responda: quanto é 2+0?",
+    "answer": "2."
+  },
+  {
+    "intent": "base_41",
+    "question": "por favor, responda: o que faz o top-k?",
+    "answer": "o top-k limita a amostragem aos tokens com maiores escores. isso reduz a escolha de opções muito improváveis."
+  },
+  {
+    "intent": "soma_9_4",
+    "question": "por favor, responda: quanto é 9+4?",
+    "answer": "13."
+  },
+  {
+    "intent": "soma_3_8",
+    "question": "por favor, responda: quanto é 3+8?",
+    "answer": "11."
+  },
+  {
+    "intent": "base_23",
+    "question": "por favor, responda: o que é um vocabulário?",
+    "answer": "o vocabulário associa cada token conhecido a um identificador. essa associação precisa ser preservada junto com os pesos do modelo."
+  },
+  {
+    "intent": "base_30",
+    "question": "por favor, responda: o que é um transformer block?",
+    "answer": "um transformer block reúne atenção, normalização, rede feedforward e conexões residuais. sua saída mantém a dimensão da entrada."
+  },
+  {
+    "intent": "soma_4_8",
+    "question": "por favor, responda: quanto é 4+8?",
+    "answer": "12."
+  },
+  {
+    "intent": "base_46",
+    "question": "por favor, responda: para que serve o dataset?",
+    "answer": "o dataset organiza as sequências de entrada e seus alvos. o alvo de cada posição é o próximo token."
+  },
+  {
+    "intent": "base_115",
+    "question": "por favor, responda: como verificar os pesos salvos?",
+    "answer": "carregue o checkpoint e confira sua configuração e sua perda de validação. as previsões devem ser preservadas após salvar e carregar."
+  },
+  {
+    "intent": "base_62",
+    "question": "por favor, responda: você tem acesso à internet?",
+    "answer": "este modelo local não consulta a internet durante a geração. as respostas são produzidas pelos pesos aprendidos."
+  },
+  {
+    "intent": "despedida",
+    "question": "até logo, obrigado",
+    "answer": "até logo! bons estudos."
+  },
+  {
+    "intent": "soma_0_0",
+    "question": "por favor, responda: quanto é 0+0?",
+    "answer": "0."
+  },
+  {
+    "intent": "base_92",
+    "question": "por favor, responda: o que significa avaliar o modelo?",
+    "answer": "avaliar significa medir o comportamento do modelo em exemplos separados e analisar suas previsões com critérios definidos."
+  },
+  {
+    "intent": "base_45",
+    "question": "por favor, responda: o que é um lote?",
+    "answer": "um lote reúne várias amostras para processamento conjunto. o tamanho do lote influencia o uso de memória."
+  },
+  {
+    "intent": "base_79",
+    "question": "por favor, responda: como termina uma resposta?",
+    "answer": "a geração termina quando o modelo produz um marcador de fim ou quando alcança o limite de tokens configurado."
+  },
+  {
+    "intent": "soma_4_1",
+    "question": "por favor, responda: quanto é 4+1?",
+    "answer": "5."
+  },
+  {
+    "intent": "base_82",
+    "question": "por favor, responda: escreva uma frase sobre estudos",
+    "answer": "estudar um pouco a cada dia ajuda a organizar o conhecimento e a perceber novas perguntas."
+  },
+  {
+    "intent": "soma_7_3",
+    "question": "por favor, responda: quanto é 7+3?",
+    "answer": "10."
+  },
+  {
+    "intent": "base_33",
+    "question": "por favor, responda: o que é uma rede feedforward?",
+    "answer": "a rede feedforward aplica transformações não lineares a cada posição. ela aumenta a capacidade de representação do bloco."
+  },
+  {
+    "intent": "agradecimento",
+    "question": "por favor, responda: obrigado",
+    "answer": "de nada! espero ter ajudado."
+  },
+  {
+    "intent": "soma_2_1",
+    "question": "por favor, responda: quanto é 2+1?",
+    "answer": "3."
+  },
+  {
+    "intent": "base_88",
+    "question": "por favor, responda: qual é o objetivo do nosso projeto?",
+    "answer": "o objetivo é estudar um modelo de linguagem desde a preparação do texto até a arquitetura e a geração de tokens."
+  },
+  {
+    "intent": "base_105",
+    "question": "por favor, responda: por que é importante explicar as limitações?",
+    "answer": "explicar as limitações ajuda a interpretar os resultados e evita atribuir ao modelo capacidades que o experimento não demonstrou."
+  },
+  {
+    "intent": "idioma",
+    "question": "por favor, responda: você fala português?",
+    "answer": "sim. posso gerar pequenas respostas em português."
+  },
+  {
+    "intent": "base_89",
+    "question": "por favor, responda: como a pergunta vira números?",
+    "answer": "o tokenizador divide a pergunta em tokens e consulta seus identificadores no vocabulário. os embeddings transformam esses identificadores em vetores."
+  },
+  {
+    "intent": "soma_1_3",
+    "question": "por favor, responda: quanto é 1+3?",
+    "answer": "4."
+  },
+  {
+    "intent": "soma_8_2",
+    "question": "por favor, responda: quanto é 8+2?",
+    "answer": "10."
+  },
+  {
+    "intent": "soma_8_0",
+    "question": "por favor, responda: quanto é 8+0?",
+    "answer": "8."
+  },
+  {
+    "intent": "base_28",
+    "question": "por favor, responda: para que serve a máscara causal?",
+    "answer": "a máscara causal impede que uma posição consulte tokens futuros. assim o modelo aprende a prever usando apenas o contexto permitido."
+  },
+  {
+    "intent": "soma_5_4",
+    "question": "por favor, responda: quanto é 5+4?",
+    "answer": "9."
+  },
+  {
+    "intent": "soma_3_3",
+    "question": "por favor, responda: quanto é 3+3?",
+    "answer": "6."
+  },
+  {
+    "intent": "token",
+    "question": "qual é a definição de token?",
+    "answer": "um token é uma unidade de texto, como uma palavra ou um sinal."
+  },
+  {
+    "intent": "base_31",
+    "question": "por favor, responda: qual é a função da normalização?",
+    "answer": "a normalização ajuda a controlar a escala das ativações. isso contribui para a estabilidade do processamento e do treinamento."
+  },
+  {
+    "intent": "identidade",
+    "question": "por favor, responda: quem é você?",
+    "answer": "sou um modelo de linguagem didático do projeto da faculdade."
+  },
+  {
+    "intent": "soma_0_2",
+    "question": "por favor, responda: quanto é 0+2?",
+    "answer": "2."
+  },
+  {
+    "intent": "base_84",
+    "question": "por favor, responda: escreva uma frase sobre ciência",
+    "answer": "observar os resultados com atenção e reconhecer as limitações faz parte de uma investigação cuidadosa."
+  },
+  {
+    "intent": "base_96",
+    "question": "por favor, responda: como continuar aprendendo programação?",
+    "answer": "faça pequenos programas, leia o código com atenção e verifique cada mudança com exemplos simples."
+  },
+  {
+    "intent": "soma_4_9",
+    "question": "por favor, responda: quanto é 4+9?",
+    "answer": "13."
+  },
+  {
+    "intent": "base_113",
+    "question": "por favor, responda: você consegue criar texto novo?",
+    "answer": "a geração combina tokens em novas sequências, mas um modelo pequeno também pode repetir partes dos exemplos de treinamento."
+  },
+  {
+    "intent": "soma_7_2",
+    "question": "por favor, responda: quanto é 7+2?",
+    "answer": "9."
+  },
+  {
+    "intent": "soma_4_5",
+    "question": "por favor, responda: quanto é 4+5?",
+    "answer": "9."
+  },
+  {
+    "intent": "soma_8_9",
+    "question": "por favor, responda: quanto é 8+9?",
+    "answer": "17."
+  },
+  {
+    "intent": "soma_7_5",
+    "question": "por favor, responda: quanto é 7+5?",
+    "answer": "12."
+  },
+  {
+    "intent": "soma_0_3",
+    "question": "por favor, responda: quanto é 0+3?",
+    "answer": "3."
+  },
+  {
+    "intent": "soma_3_7",
+    "question": "por favor, responda: quanto é 3+7?",
+    "answer": "10."
+  },
+  {
+    "intent": "base_90",
+    "question": "por favor, responda: o que muda quando o contexto aumenta?",
+    "answer": "o modelo recebe mais tokens para a previsão e precisa realizar mais operações. a atenção pode aumentar bastante o uso de memória."
+  },
+  {
+    "intent": "agradecimento",
+    "question": "muito obrigada pela ajuda",
+    "answer": "de nada! espero ter ajudado."
+  },
+  {
+    "intent": "soma_9_6",
+    "question": "por favor, responda: quanto é 9+6?",
+    "answer": "15."
+  },
+  {
+    "intent": "soma_1_6",
+    "question": "por favor, responda: quanto é 1+6?",
+    "answer": "7."
+  },
+  {
+    "intent": "soma_0_6",
+    "question": "por favor, responda: quanto é 0+6?",
+    "answer": "6."
+  },
+  {
+    "intent": "soma_3_5",
+    "question": "por favor, responda: quanto é 3+5?",
+    "answer": "8."
+  },
+  {
+    "intent": "soma_2_7",
+    "question": "por favor, responda: quanto é 2+7?",
+    "answer": "9."
+  },
+  {
+    "intent": "base_37",
+    "question": "por favor, responda: o que faz a camada de saída?",
+    "answer": "a camada de saída transforma os vetores finais em escores para todos os tokens do vocabulário."
+  },
+  {
+    "intent": "base_112",
+    "question": "por favor, responda: o que a validação mostra?",
+    "answer": "a validação mostra a perda em exemplos separados do ajuste dos pesos. ela ajuda a comparar épocas e escolher o melhor resultado observado."
+  },
+  {
+    "intent": "soma_0_5",
+    "question": "por favor, responda: quanto é 0+5?",
+    "answer": "5."
+  },
+  {
+    "intent": "soma_9_2",
+    "question": "por favor, responda: quanto é 9+2?",
+    "answer": "11."
+  },
+  {
+    "intent": "base_67",
+    "question": "por favor, responda: para que serve a documentação?",
+    "answer": "a documentação explica as decisões, as instruções de execução e as limitações do projeto. ela facilita a colaboração."
+  },
+  {
+    "intent": "soma_9_1",
+    "question": "por favor, responda: quanto é 9+1?",
+    "answer": "10."
+  },
+  {
+    "intent": "base_109",
+    "question": "por favor, responda: por que você usa palavras conhecidas?",
+    "answer": "o vocabulário deste modelo é formado pelas palavras presentes no conjunto de treinamento. palavras novas podem ser representadas como desconhecidas."
+  },
+  {
+    "intent": "base_54",
+    "question": "por favor, responda: o que é sobreajuste?",
+    "answer": "sobreajuste ocorre quando o modelo se ajusta demais aos exemplos de treino e perde qualidade em exemplos diferentes."
+  },
+  {
+    "intent": "base_111",
+    "question": "por favor, responda: o que aprendemos ao construir uma llm pequena?",
+    "answer": "aprendemos como representar texto, calcular atenção, organizar blocos e ajustar pesos para prever tokens."
+  },
+  {
+    "intent": "soma_1_8",
+    "question": "por favor, responda: quanto é 1+8?",
+    "answer": "9."
+  },
+  {
+    "intent": "base_99",
+    "question": "por favor, responda: você pode conversar comigo em português?",
+    "answer": "posso gerar pequenas respostas em português. minhas respostas dependem de poucos exemplos e ainda podem conter repetições."
+  },
+  {
+    "intent": "base_63",
+    "question": "por favor, responda: o que você consegue explicar?",
+    "answer": "posso tentar gerar explicações simples sobre tokens, atenção, treinamento e os componentes deste projeto didático."
+  },
+  {
+    "intent": "confirmacao",
+    "question": "certo, obrigado",
+    "answer": "certo. pode perguntar."
+  },
+  {
+    "intent": "limites",
+    "question": "por favor, responda: você sabe tudo?",
+    "answer": "sou um modelo pequeno e posso errar. confira as respostas."
+  },
+  {
+    "intent": "base_19",
+    "question": "por favor, responda: o que é uma llm?",
+    "answer": "uma llm é um modelo de linguagem de grande porte. este projeto usa uma versão pequena para estudar seus componentes."
+  },
+  {
+    "intent": "soma_4_2",
+    "question": "por favor, responda: quanto é 4+2?",
+    "answer": "6."
+  },
+  {
+    "intent": "treinamento",
+    "question": "como o modelo é treinado?",
+    "answer": "treinar é ajustar os pesos usando exemplos para reduzir o erro."
+  },
+  {
+    "intent": "estado",
+    "question": "como está você hoje?",
+    "answer": "estou pronto para ajudar. como posso ajudar você?"
+  },
+  {
+    "intent": "atencao",
+    "question": "por favor, responda: o que é atenção?",
+    "answer": "a atenção combina informações dos tokens do contexto."
+  },
+  {
+    "intent": "base_103",
+    "question": "por favor, responda: como os dados ajudam no aprendizado?",
+    "answer": "os dados apresentam padrões de texto e fornecem alvos para as previsões. a qualidade dos exemplos influencia o resultado do treinamento."
+  },
+  {
+    "intent": "soma_5_9",
+    "question": "por favor, responda: quanto é 5+9?",
+    "answer": "14."
+  },
+  {
+    "intent": "base_69",
+    "question": "por favor, responda: o que é programação?",
+    "answer": "programação é a criação de instruções para que um computador execute tarefas e transforme informações."
+  },
+  {
+    "intent": "cumprimento",
+    "question": "bom dia, tudo bem?",
+    "answer": "olá! tudo bem. como posso ajudar?"
+  },
+  {
+    "intent": "idioma",
+    "question": "você pode me responder em português?",
+    "answer": "sim. posso gerar pequenas respostas em português."
+  },
+  {
+    "intent": "base_85",
+    "question": "por favor, responda: o que acontece depois do treinamento?",
+    "answer": "o programa salva o melhor checkpoint e usa os pesos aprendidos para produzir novas sequências de texto."
+  },
+  {
+    "intent": "soma_2_4",
+    "question": "por favor, responda: quanto é 2+4?",
+    "answer": "6."
+  },
+  {
+    "intent": "soma_9_7",
+    "question": "por favor, responda: quanto é 9+7?",
+    "answer": "16."
+  },
+  {
+    "intent": "soma_7_0",
+    "question": "por favor, responda: quanto é 7+0?",
+    "answer": "7."
+  },
+  {
+    "intent": "base_100",
+    "question": "por favor, responda: você pode explicar o projeto?",
+    "answer": "o projeto reúne tokenização, embeddings, atenção, blocos transformer e treinamento para estudar como um modelo gera texto."
+  },
+  {
+    "intent": "cumprimento",
+    "question": "oi, tudo bem?",
+    "answer": "olá! tudo bem. como posso ajudar?"
+  },
+  {
+    "intent": "base_25",
+    "question": "por favor, responda: o que são embeddings?",
+    "answer": "embeddings são vetores numéricos aprendidos que representam tokens. eles permitem que a rede processe o texto com operações matemáticas."
+  },
+  {
+    "intent": "base_49",
+    "question": "por favor, responda: o que é cross-entropy?",
+    "answer": "cross-entropy é uma função de perda usada para comparar os escores do vocabulário com o token correto."
+  },
+  {
+    "intent": "soma_5_1",
+    "question": "por favor, responda: quanto é 5+1?",
+    "answer": "6."
+  },
+  {
+    "intent": "soma_8_7",
+    "question": "por favor, responda: quanto é 8+7?",
+    "answer": "15."
+  },
+  {
+    "intent": "soma_8_8",
+    "question": "por favor, responda: quanto é 8+8?",
+    "answer": "16."
+  },
+  {
+    "intent": "base_75",
+    "question": "por favor, responda: por que os acentos importam?",
+    "answer": "os acentos fazem parte da escrita em português e podem distinguir palavras. o tokenizador preserva os acentos conhecidos."
+  },
+  {
+    "intent": "base_5",
+    "question": "por favor, responda: boa noite",
+    "answer": "boa noite! podemos conversar sobre estudos, textos e modelos de linguagem."
+  },
+  {
+    "intent": "base_24",
+    "question": "por favor, responda: por que aparece um token desconhecido?",
+    "answer": "o token desconhecido aparece quando uma palavra não está no vocabulário criado com os dados de treinamento."
+  },
+  {
+    "intent": "soma_9_9",
+    "question": "por favor, responda: quanto é 9+9?",
+    "answer": "18."
+  },
+  {
+    "intent": "base_76",
+    "question": "por favor, responda: por que usar letras minúsculas?",
+    "answer": "neste perfil didático, letras minúsculas reduzem diferenças entre palavras iguais escritas com letras de tamanhos diferentes."
+  },
+  {
+    "intent": "base_74",
+    "question": "por favor, responda: o que é memória do contexto?",
+    "answer": "o contexto é a sequência de tokens disponível para a próxima previsão. nesta implementação seu tamanho é limitado pela configuração do modelo."
+  },
+  {
+    "intent": "soma_1_5",
+    "question": "por favor, responda: quanto é 1+5?",
+    "answer": "6."
+  },
+  {
+    "intent": "soma_0_9",
+    "question": "por favor, responda: quanto é 0+9?",
+    "answer": "9."
+  },
+  {
+    "intent": "base_86",
+    "question": "por favor, responda: como verificar uma resposta?",
+    "answer": "compare a resposta com os materiais de estudo e com os resultados dos testes. uma frase bem escrita ainda pode conter erros."
+  },
+  {
+    "intent": "capacidade",
+    "question": "como você pode me ajudar com o projeto?",
+    "answer": "posso ajudar com explicações simples sobre estudos e o projeto."
+  },
+  {
+    "intent": "soma_8_6",
+    "question": "por favor, responda: quanto é 8+6?",
+    "answer": "14."
+  },
+  {
+    "intent": "checkpoint",
+    "question": "o que fica salvo no checkpoint?",
+    "answer": "um checkpoint salva os pesos, a configuração e o vocabulário."
+  },
+  {
+    "intent": "soma_9_8",
+    "question": "por favor, responda: quanto é 9+8?",
+    "answer": "17."
+  },
+  {
+    "intent": "base_93",
+    "question": "por favor, responda: o que significa reduzir o erro?",
+    "answer": "reduzir o erro significa aproximar as previsões dos alvos utilizados no treinamento. isso não garante respostas corretas para qualquer pergunta."
+  },
+  {
+    "intent": "soma_6_8",
+    "question": "por favor, responda: quanto é 6+8?",
+    "answer": "14."
+  },
+  {
+    "intent": "token",
+    "question": "por favor, responda: o que é um token?",
+    "answer": "um token é uma unidade de texto, como uma palavra ou um sinal."
+  },
+  {
+    "intent": "base_55",
+    "question": "por favor, responda: para que serve a parada antecipada?",
+    "answer": "a parada antecipada encerra o treinamento quando a validação deixa de melhorar por várias épocas."
+  },
+  {
+    "intent": "direto",
+    "question": "quero uma resposta curta",
+    "answer": "certo. vou responder de forma curta."
+  }
+]

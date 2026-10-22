@@ -35,26 +35,49 @@ def prepare_training_data(
     special_tokens: tuple[str, ...] = SPECIAL_TOKENS,
     document_separator: str | None = None,
     task: str = "continuation",
+    validation_text: str | None = None,
+    split_math: bool = False,
 ) -> TrainingData:
     """Divide tokens contíguos antes das janelas e aprende o vocabulário no treino."""
 
     if context_length <= 0:
         raise ValueError("context_length deve ser maior que zero")
-    tokens = tokenize_text(normalize_text(text, normalization), special_tokens)
+    tokens = tokenize_text(normalize_text(text, normalization), special_tokens, split_math=split_math)
     split = int(len(tokens) * config.train_fraction)
-    if document_separator is not None:
+    if document_separator is not None and validation_text is None:
         boundaries = [i + 1 for i, token in enumerate(tokens[:split])
                       if token == document_separator]
         if not boundaries:
             raise ValueError("Não há separador de documento antes da divisão de treino")
         split = boundaries[-1]
-    if min(split, len(tokens) - split) < context_length + 1:
+    if validation_text is not None:
+        train_tokens = tokens
+        validation_tokens = tokenize_text(
+            normalize_text(validation_text, normalization), special_tokens, split_math=split_math
+        )
+    else:
+        train_tokens, validation_tokens = tokens[:split], tokens[split:]
+    if validation_text is not None and task == "dialogue":
+        def questions(sequence):
+            prefixes = set()
+            current = []
+            for token in sequence:
+                if token == "<|endoftext|>":
+                    if "<|assistant|>" in current:
+                        prefixes.add(tuple(current[:current.index("<|assistant|>")]))
+                    current = []
+                else:
+                    current.append(token)
+            return prefixes
+
+        if questions(train_tokens) & questions(validation_tokens):
+            raise ValueError("Perguntas iguais aparecem no treino e na validação")
+    if min(len(train_tokens), len(validation_tokens)) < context_length + 1:
         raise ValueError(
             "Treino e validação precisam ter pelo menos context_length + 1 tokens cada"
         )
-    train_tokens, validation_tokens = tokens[:split], tokens[split:]
     vocabulary = build_vocab(train_tokens, special_tokens)
-    tokenizer = SimpleTokenizerV2(vocabulary, special_tokens, normalization)
+    tokenizer = SimpleTokenizerV2(vocabulary, special_tokens, normalization, split_math)
     unknown_id = vocabulary[tokenizer.unknown_token]
     train_ids = [vocabulary[token] for token in train_tokens]
     validation_ids = [vocabulary.get(token, unknown_id) for token in validation_tokens]
@@ -85,7 +108,7 @@ def prepare_training_data(
         validation_loader=DataLoader(validation_dataset, batch_size=config.batch_size, collate_fn=collate_fn),
         summary={
             "corpus_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
-            "total_tokens": len(tokens),
+            "total_tokens": len(train_tokens) + len(validation_tokens),
             "train_tokens": len(train_ids),
             "validation_tokens": len(validation_ids),
             "vocab_size": len(vocabulary),
@@ -98,6 +121,9 @@ def prepare_training_data(
             "document_separator": document_separator,
             "task": task,
             "loss_scope": "assistant_tokens" if task == "dialogue" else "all_tokens",
+            "split_strategy": "explicit_validation" if validation_text is not None else "contiguous",
+            "validation_sha256": hashlib.sha256(validation_text.encode("utf-8")).hexdigest()
+            if validation_text is not None else None,
         },
     )
 

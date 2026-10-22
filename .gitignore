@@ -19,3 +19,5 @@ env/
 /experiments/*.pt.*.tmp
 /experiments/treinamento_metricas.json
 /experiments/treinamento_metricas_pt.json
+/experiments/treinamento_metricas_pt_v2.json
+/experiments/avaliacao_portugues_resultado.json

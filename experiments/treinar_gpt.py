@@ -33,6 +33,7 @@ def write_report(path: Path, result: dict) -> None:
         "adicional ao escopo da Sprint 4.", "",
         "## Configuração e dados", "",
         f"- Corpus: `{result['corpus']}`;",
+        f"- Divisão: `{data['split_strategy']}`; validação: `{result.get('validation_corpus')}`;",
         f"- Origem: {result['corpus_origin']};",
         f"- Tarefa: `{result['task']}`; normalização: `{result['normalization']}`;",
         f"- Escopo da perda: `{data['loss_scope']}` (padding sempre ignorado);",
@@ -93,6 +94,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--language", choices=tuple(LANGUAGE_PROFILES), default="en")
     parser.add_argument("--corpus", type=Path)
+    parser.add_argument("--validation-corpus", type=Path)
     parser.add_argument("--epochs", type=int)
     parser.add_argument("--batch-size", type=int)
     parser.add_argument("--learning-rate", type=float)
@@ -113,10 +115,13 @@ def main() -> None:
     parser.add_argument("--metrics", type=Path)
     parser.add_argument("--report", type=Path)
     args = parser.parse_args()
+    custom_corpus = args.corpus is not None
     profile = LANGUAGE_PROFILES[args.language]
     for name in ("corpus", "checkpoint", "metrics", "report", "prompt"):
         if getattr(args, name) is None:
             setattr(args, name, profile[name])
+    if args.validation_corpus is None and not custom_corpus:
+        args.validation_corpus = profile.get("validation_corpus")
     if args.threads <= 0:
         parser.error("--threads deve ser maior que zero")
     if args.device == "cuda" and not torch.cuda.is_available():
@@ -150,6 +155,9 @@ def main() -> None:
             normalization=profile["normalization"], special_tokens=profile["special_tokens"],
             document_separator="<|endoftext|>" if profile["task"] == "dialogue" else None,
             task=profile["task"],
+            validation_text=args.validation_corpus.read_text(encoding="utf-8")
+            if args.validation_corpus is not None else None,
+            split_math=profile.get("split_math", False),
         )
         model = GPTModel(
             vocab_size=len(data.tokenizer.str_to_int), context_length=architecture.context_length,
@@ -181,6 +189,7 @@ def main() -> None:
     )
     result.update({
         "corpus": args.corpus.name, "device": device,
+        "validation_corpus": args.validation_corpus.name if args.validation_corpus else None,
         "python_version": platform.python_version(), "torch_version": str(torch.__version__),
         "threads": args.threads, "parameter_count": model.parameter_count(),
         "elapsed_seconds": elapsed, "prompt": args.prompt,

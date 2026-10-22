@@ -63,7 +63,7 @@ def main() -> None:
     if args.top_k is not None and not 1 <= args.top_k <= loaded.model.config.vocab_size:
         parser.error("top-k deve estar entre 1 e o tamanho do vocabulário")
     print(
-        f"Modelo carregado: epoca {loaded.epoch}; "
+        f"Modelo carregado: {args.checkpoint.name}; epoca {loaded.epoch}; "
         f"validacao {loaded.validation_loss:.4f}; dispositivo {device}."
     )
     if dialogue:

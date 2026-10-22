@@ -30,23 +30,26 @@ def normalize_text(text: str, normalization: str | None = None) -> str:
     return unicodedata.normalize("NFC", text).lower()
 
 
-def _build_split_pattern(special_tokens: Iterable[str]) -> re.Pattern[str]:
+def _build_split_pattern(special_tokens: Iterable[str], split_math: bool = False) -> re.Pattern[str]:
     escaped_special_tokens = sorted(
         (re.escape(token) for token in special_tokens),
         key=len,
         reverse=True,
     )
     special_pattern = "|".join(escaped_special_tokens)
-    return re.compile(f"({special_pattern}|{_PUNCTUATION_PATTERN})")
+    math_pattern = r"|[+*/=\-]" if split_math else ""
+    return re.compile(f"({special_pattern}|{_PUNCTUATION_PATTERN}{math_pattern})")
 
 
-def tokenize_text(text: str, special_tokens: Iterable[str] = SPECIAL_TOKENS) -> list[str]:
+def tokenize_text(
+    text: str, special_tokens: Iterable[str] = SPECIAL_TOKENS, *, split_math: bool = False
+) -> list[str]:
     """Divide texto em tokens, preservando tokens especiais."""
 
     if not isinstance(text, str):
         raise TypeError("text deve ser uma string")
 
-    split_pattern = _build_split_pattern(special_tokens)
+    split_pattern = _build_split_pattern(special_tokens, split_math)
     pieces = split_pattern.split(text)
     return [piece.strip() for piece in pieces if piece and piece.strip()]
 
@@ -71,12 +74,14 @@ class SimpleTokenizerV2:
         vocab: Mapping[str, int],
         special_tokens: Iterable[str] = SPECIAL_TOKENS,
         normalization: str | None = None,
+        split_math: bool = False,
     ) -> None:
         self.str_to_int = dict(vocab)
         self.int_to_str = {token_id: token for token, token_id in vocab.items()}
         self.special_tokens = tuple(special_tokens)
         normalize_text("", normalization)  # Valida a opção mesmo com texto vazio.
         self.normalization = normalization
+        self.split_math = split_math
         self.unknown_token = "<|unk|>"
 
         if self.unknown_token not in self.str_to_int:
@@ -87,7 +92,10 @@ class SimpleTokenizerV2:
     def tokenize(self, text: str) -> list[str]:
         """Retorna os tokens textuais, sem convertê-los em IDs."""
 
-        return tokenize_text(normalize_text(text, self.normalization), self.special_tokens)
+        return tokenize_text(
+            normalize_text(text, self.normalization), self.special_tokens,
+            split_math=self.split_math,
+        )
 
     def encode(self, text: str) -> list[int]:
         """Converte texto em Token IDs, usando UNK para tokens desconhecidos."""
