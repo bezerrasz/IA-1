@@ -96,6 +96,33 @@ generated_ids = model.generate(
 )
 ```
 
+## Treinar o GPT e usar os pesos salvos
+
+Para executar um treinamento inicial pequeno na CPU:
+
+```powershell
+.\.venv\Scripts\python.exe experiments\treinar_gpt.py
+```
+
+O programa separa treino/validação, registra as perdas e salva o melhor modelo
+em `experiments/gpt_treinado.pt`. Depois, teste uma continuação ou digite frases
+no modo interativo:
+
+```powershell
+.\.venv\Scripts\python.exe experiments\gerar_texto.py --prompt "I HAD always"
+.\.venv\Scripts\python.exe experiments\gerar_texto.py --interactive
+```
+
+No modo interativo, `/sair` encerra a execução. O modelo aprende com um conto
+curto em inglês e gera continuações; sua qualidade é limitada pelo tamanho dos
+dados e da arquitetura. Os experimentos originais da Sprint 4 continuam usando
+pesos aleatórios para comparação; `gerar_texto.py` carrega os pesos treinados.
+
+O procedimento, as opções e as limitações estão em
+[`docs/treinamento.md`](docs/treinamento.md). O comando de treino gera o relatório
+`docs/resultados_treinamento.md`. Os pesos binários e o JSON de métricas ficam
+locais, fora do versionamento.
+
 ## ✅ Integração da Sprint 3
 
 As classes didáticas da Sprint 3 permanecem disponíveis em
