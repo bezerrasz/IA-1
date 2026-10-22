@@ -137,15 +137,24 @@ Na primeira execução em outra máquina, produza os pesos com:
 .\.venv\Scripts\python.exe experiments\treinar_gpt.py --language pt
 ```
 
-O perfil usa `corpus_portugues.txt`, um corpus sintético didático de perguntas
-e respostas, e salva `experiments/gpt_portugues.pt` sem substituir o modelo em
+O perfil revisado usa `corpus_dialogos_pt_treino.txt`, um corpus sintético
+didático de perguntas e respostas, e salva `experiments/gpt_portugues_v2.pt` sem substituir o modelo em
 inglês. Experimente `olá, tudo bem?` ou `O que você faz?`; essas perguntas estão
 nos dados de treinamento. A geração é feita pelo GPT e continua sujeita a erros
 e repetições. `/sair` encerra o modo interativo.
 
 Veja o procedimento, a origem dos dados e as limitações em
 [`docs/portugues.md`](docs/portugues.md). O treino gera
-`docs/resultados_treinamento_portugues.md`. Os pesos ficam locais, fora do Git.
+`docs/resultados_treinamento_portugues_v2.md`. Os pesos ficam locais, fora do Git.
+
+Para avaliar as respostas do modelo treinado, além dos testes de código:
+
+```powershell
+.\.venv\Scripts\python.exe experiments\avaliar_portugues.py
+```
+
+O relatório `docs/avaliacao_portugues.md` separa as perguntas já vistas no treino
+das variações de um teste controlado. Esse experimento não mede conversa geral.
 
 ## ✅ Integração da Sprint 3
 
