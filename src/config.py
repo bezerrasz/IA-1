@@ -27,3 +27,19 @@ class Sprint2Config:
 
 
 DEFAULT_CONFIG = Sprint2Config()
+
+
+@dataclass(frozen=True)
+class Sprint4Config:
+    """Configuração compacta usada como referência nos experimentos do GPT."""
+
+    context_length: int = 16
+    embedding_dim: int = 32
+    num_heads: int = 4
+    num_layers: int = 2
+    feed_forward_dim: int = 64
+    dropout: float = 0.0
+    max_new_tokens: int = 4
+
+
+DEFAULT_SPRINT4_CONFIG = Sprint4Config()
