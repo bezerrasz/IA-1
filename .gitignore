@@ -18,3 +18,4 @@ env/
 /experiments/*.pt
 /experiments/*.pt.*.tmp
 /experiments/treinamento_metricas.json
+/experiments/treinamento_metricas_pt.json

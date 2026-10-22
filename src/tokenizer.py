@@ -8,6 +8,7 @@ reconhecidos antes dessa separação para permanecerem como unidades únicas.
 from __future__ import annotations
 
 import re
+import unicodedata
 from collections.abc import Iterable, Mapping
 
 try:
@@ -17,6 +18,16 @@ except ImportError:  # Permite importar o módulo diretamente a partir de src/.
 
 
 _PUNCTUATION_PATTERN = r"[,.:;?_!\"()']|--|\s"
+
+
+def normalize_text(text: str, normalization: str | None = None) -> str:
+    """Normaliza Unicode e caixa no perfil português, preservando os acentos."""
+
+    if normalization is None:
+        return text
+    if normalization != "nfc_lower":
+        raise ValueError("normalization deve ser None ou 'nfc_lower'")
+    return unicodedata.normalize("NFC", text).lower()
 
 
 def _build_split_pattern(special_tokens: Iterable[str]) -> re.Pattern[str]:
@@ -59,10 +70,13 @@ class SimpleTokenizerV2:
         self,
         vocab: Mapping[str, int],
         special_tokens: Iterable[str] = SPECIAL_TOKENS,
+        normalization: str | None = None,
     ) -> None:
         self.str_to_int = dict(vocab)
         self.int_to_str = {token_id: token for token, token_id in vocab.items()}
         self.special_tokens = tuple(special_tokens)
+        normalize_text("", normalization)  # Valida a opção mesmo com texto vazio.
+        self.normalization = normalization
         self.unknown_token = "<|unk|>"
 
         if self.unknown_token not in self.str_to_int:
@@ -73,7 +87,7 @@ class SimpleTokenizerV2:
     def tokenize(self, text: str) -> list[str]:
         """Retorna os tokens textuais, sem convertê-los em IDs."""
 
-        return tokenize_text(text, self.special_tokens)
+        return tokenize_text(normalize_text(text, self.normalization), self.special_tokens)
 
     def encode(self, text: str) -> list[int]:
         """Converte texto em Token IDs, usando UNK para tokens desconhecidos."""
@@ -99,4 +113,4 @@ class SimpleTokenizerV2:
         return text
 
 
-__all__ = ["SimpleTokenizerV2", "build_vocab", "tokenize_text"]
+__all__ = ["SimpleTokenizerV2", "build_vocab", "normalize_text", "tokenize_text"]

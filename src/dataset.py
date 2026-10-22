@@ -6,6 +6,7 @@ from typing import Protocol
 
 import torch
 from torch.utils.data import Dataset
+from torch.nn.utils.rnn import pad_sequence
 
 
 class Encoder(Protocol):
@@ -64,4 +65,51 @@ class GPTDatasetV1(Dataset[tuple[torch.Tensor, torch.Tensor]]):
         return self.input_ids[idx], self.target_ids[idx]
 
 
-__all__ = ["GPTDatasetV1"]
+class GPTDialogueDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
+    """Um diálogo por amostra; somente a resposta contribui para a perda."""
+
+    def __init__(
+        self, token_ids: list[int], context_length: int,
+        assistant_id: int, end_id: int,
+    ) -> None:
+        self.samples = []
+        start = 0
+        for index, token_id in enumerate(token_ids):
+            if token_id != end_id:
+                continue
+            document = token_ids[start:index + 1]
+            start = index + 1
+            if assistant_id not in document:
+                raise ValueError("Todo diálogo precisa do marcador de assistente")
+            assistant_position = document.index(assistant_id)
+            if assistant_position >= len(document) - 2:
+                raise ValueError("Todo diálogo precisa de uma resposta antes do fim")
+            if len(document) - 1 > context_length:
+                raise ValueError("Um diálogo excede o contexto; aumente --context-length")
+            inputs = torch.tensor(document[:-1], dtype=torch.long)
+            targets = torch.tensor(document[1:], dtype=torch.long)
+            targets[:assistant_position] = -100
+            self.samples.append((inputs, targets))
+        if start != len(token_ids):
+            raise ValueError("O corpus de diálogo precisa terminar com o marcador de fim")
+        if not self.samples:
+            raise ValueError("Não há diálogos completos no conjunto")
+
+    def __len__(self) -> int:
+        return len(self.samples)
+
+    def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.Tensor]:
+        return self.samples[idx]
+
+
+def collate_dialogues(batch, pad_token_id: int):
+    """Preenchimento à direita; os alvos de padding são ignorados pela perda."""
+
+    inputs, targets = zip(*batch)
+    return (
+        pad_sequence(inputs, batch_first=True, padding_value=pad_token_id),
+        pad_sequence(targets, batch_first=True, padding_value=-100),
+    )
+
+
+__all__ = ["GPTDatasetV1", "GPTDialogueDataset", "collate_dialogues"]

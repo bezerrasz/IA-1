@@ -12,6 +12,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 CORPUS_PATH = PROJECT_ROOT / "the-verdict.txt"
 
 SPECIAL_TOKENS = ("<|endoftext|>", "<|unk|>")
+DIALOGUE_TOKENS = SPECIAL_TOKENS + ("<|user|>", "<|assistant|>")
 
 
 @dataclass(frozen=True)
@@ -73,3 +74,28 @@ class TrainingConfig:
                 raise ValueError(f"{name} deve ser positivo e finito")
         if not math.isfinite(self.weight_decay) or self.weight_decay < 0:
             raise ValueError("weight_decay deve ser não negativo e finito")
+
+
+LANGUAGE_PROFILES = {
+    "en": {
+        "label": "inglês", "corpus": CORPUS_PATH,
+        "checkpoint": PROJECT_ROOT / "experiments" / "gpt_treinado.pt",
+        "metrics": PROJECT_ROOT / "experiments" / "treinamento_metricas.json",
+        "report": PROJECT_ROOT / "docs" / "resultados_treinamento.md",
+        "prompt": "I HAD always", "task": "continuation",
+        "normalization": None, "special_tokens": SPECIAL_TOKENS,
+        "training": {}, "architecture": {},
+    },
+    "pt": {
+        "label": "português", "corpus": PROJECT_ROOT / "corpus_portugues.txt",
+        "checkpoint": PROJECT_ROOT / "experiments" / "gpt_portugues.pt",
+        "metrics": PROJECT_ROOT / "experiments" / "treinamento_metricas_pt.json",
+        "report": PROJECT_ROOT / "docs" / "resultados_treinamento_portugues.md",
+        "prompt": "olá, tudo bem?", "task": "dialogue",
+        "normalization": "nfc_lower", "special_tokens": DIALOGUE_TOKENS,
+        "training": {"epochs": 100, "learning_rate": 0.001,
+                     "stride": 16, "patience": 12},
+        "architecture": {"context_length": 64, "embedding_dim": 64,
+                         "feed_forward_dim": 128},
+    },
+}

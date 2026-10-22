@@ -45,6 +45,7 @@ def save_checkpoint(
         },
         "vocabulary": dict(tokenizer.str_to_int),
         "special_tokens": list(tokenizer.special_tokens),
+        "tokenizer_options": {"normalization": tokenizer.normalization},
         "epoch": epoch,
         "validation_loss": validation_loss,
         "metadata": metadata or {},
@@ -77,7 +78,9 @@ def load_checkpoint(
         range(config.vocab_size)
     ):
         raise ValueError("O vocabulário não corresponde à configuração salva")
-    tokenizer = SimpleTokenizerV2(vocabulary, checkpoint["special_tokens"])
+    tokenizer = SimpleTokenizerV2(
+        vocabulary, checkpoint["special_tokens"], **checkpoint.get("tokenizer_options", {})
+    )
     model = GPTModel.from_config(config)
     model.load_state_dict(checkpoint["model_state_dict"], strict=True)
     model.to(device).eval()

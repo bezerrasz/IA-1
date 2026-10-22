@@ -131,6 +131,7 @@ class GPTModel(nn.Module):
         temperature: float = 1.0,
         top_k: int | None = None,
         do_sample: bool = False,
+        eos_token_id: int | None = None,
     ) -> torch.Tensor:
         """Gera tokens anexando uma previsão ao contexto a cada iteração.
 
@@ -150,10 +151,13 @@ class GPTModel(nn.Module):
             raise ValueError("temperature deve ser maior que zero")
         if top_k is not None and not 1 <= top_k <= self.config.vocab_size:
             raise ValueError("top_k deve estar entre 1 e vocab_size")
+        if eos_token_id is not None and not 0 <= eos_token_id < self.config.vocab_size:
+            raise ValueError("eos_token_id deve ser um ID válido do vocabulário")
 
         was_training = self.training
         self.eval()
         generated = token_ids.clone()
+        finished = torch.zeros(token_ids.shape[0], dtype=torch.bool, device=token_ids.device)
         for _ in range(max_new_tokens):
             context = generated[:, -self.config.context_length :]
             logits = self(context)[:, -1, :]
@@ -168,7 +172,12 @@ class GPTModel(nn.Module):
                 next_token = torch.multinomial(probabilities, num_samples=1)
             else:
                 next_token = torch.argmax(logits, dim=-1, keepdim=True)
+            if eos_token_id is not None:
+                next_token = next_token.masked_fill(finished[:, None], eos_token_id)
+                finished |= next_token.squeeze(1) == eos_token_id
             generated = torch.cat((generated, next_token), dim=1)
+            if eos_token_id is not None and finished.all():
+                break
 
         if was_training:
             self.train()

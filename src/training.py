@@ -7,16 +7,17 @@ import math
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from pathlib import Path
+from functools import partial
 
 import torch
 from torch.nn import functional as F
 from torch.utils.data import DataLoader
 
 from .checkpoint import save_checkpoint
-from .config import TrainingConfig
-from .dataset import GPTDatasetV1
+from .config import SPECIAL_TOKENS, TrainingConfig
+from .dataset import GPTDatasetV1, GPTDialogueDataset, collate_dialogues
 from .gpt import GPTModel
-from .tokenizer import SimpleTokenizerV2, build_vocab, tokenize_text
+from .tokenizer import SimpleTokenizerV2, build_vocab, normalize_text, tokenize_text
 
 
 @dataclass
@@ -29,40 +30,59 @@ class TrainingData:
 
 
 def prepare_training_data(
-    text: str, context_length: int, config: TrainingConfig
+    text: str, context_length: int, config: TrainingConfig,
+    *, normalization: str | None = None,
+    special_tokens: tuple[str, ...] = SPECIAL_TOKENS,
+    document_separator: str | None = None,
+    task: str = "continuation",
 ) -> TrainingData:
     """Divide tokens contíguos antes das janelas e aprende o vocabulário no treino."""
 
     if context_length <= 0:
         raise ValueError("context_length deve ser maior que zero")
-    tokens = tokenize_text(text)
+    tokens = tokenize_text(normalize_text(text, normalization), special_tokens)
     split = int(len(tokens) * config.train_fraction)
+    if document_separator is not None:
+        boundaries = [i + 1 for i, token in enumerate(tokens[:split])
+                      if token == document_separator]
+        if not boundaries:
+            raise ValueError("Não há separador de documento antes da divisão de treino")
+        split = boundaries[-1]
     if min(split, len(tokens) - split) < context_length + 1:
         raise ValueError(
             "Treino e validação precisam ter pelo menos context_length + 1 tokens cada"
         )
     train_tokens, validation_tokens = tokens[:split], tokens[split:]
-    vocabulary = build_vocab(train_tokens)
-    tokenizer = SimpleTokenizerV2(vocabulary)
+    vocabulary = build_vocab(train_tokens, special_tokens)
+    tokenizer = SimpleTokenizerV2(vocabulary, special_tokens, normalization)
     unknown_id = vocabulary[tokenizer.unknown_token]
     train_ids = [vocabulary[token] for token in train_tokens]
     validation_ids = [vocabulary.get(token, unknown_id) for token in validation_tokens]
 
-    train_dataset = GPTDatasetV1.from_token_ids(
-        train_ids, context_length, config.stride
-    )
-    validation_dataset = GPTDatasetV1.from_token_ids(
-        validation_ids, context_length, context_length
-    )
+    collate_fn = None
+    if task == "dialogue":
+        assistant_id = vocabulary.get("<|assistant|>")
+        if assistant_id is None or document_separator != "<|endoftext|>":
+            raise ValueError("Diálogos exigem marcadores de assistente e fim de texto")
+        end_id = vocabulary["<|endoftext|>"]
+        train_dataset = GPTDialogueDataset(train_ids, context_length, assistant_id, end_id)
+        validation_dataset = GPTDialogueDataset(validation_ids, context_length, assistant_id, end_id)
+        collate_fn = partial(collate_dialogues, pad_token_id=end_id)
+    elif task == "continuation":
+        train_dataset = GPTDatasetV1.from_token_ids(train_ids, context_length, config.stride)
+        validation_dataset = GPTDatasetV1.from_token_ids(validation_ids, context_length, context_length)
+    else:
+        raise ValueError("task deve ser 'continuation' ou 'dialogue'")
     generator = torch.Generator().manual_seed(config.seed)
     return TrainingData(
         tokenizer=tokenizer,
         train_loader=DataLoader(
             train_dataset, batch_size=config.batch_size, shuffle=True,
             drop_last=False, generator=generator,
+            collate_fn=collate_fn,
         ),
-        train_eval_loader=DataLoader(train_dataset, batch_size=config.batch_size),
-        validation_loader=DataLoader(validation_dataset, batch_size=config.batch_size),
+        train_eval_loader=DataLoader(train_dataset, batch_size=config.batch_size, collate_fn=collate_fn),
+        validation_loader=DataLoader(validation_dataset, batch_size=config.batch_size, collate_fn=collate_fn),
         summary={
             "corpus_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
             "total_tokens": len(tokens),
@@ -75,6 +95,9 @@ def prepare_training_data(
             "validation_unknown_rate": sum(
                 token == unknown_id for token in validation_ids
             ) / len(validation_ids),
+            "document_separator": document_separator,
+            "task": task,
+            "loss_scope": "assistant_tokens" if task == "dialogue" else "all_tokens",
         },
     )
 
@@ -96,7 +119,7 @@ def evaluate_loss(
             total_loss += F.cross_entropy(
                 logits.flatten(0, 1), targets.flatten(), reduction="sum"
             ).item()
-            total_tokens += targets.numel()
+            total_tokens += (targets != -100).sum().item()
     finally:
         model.train(was_training)
     if not total_tokens:
@@ -115,6 +138,7 @@ def fit(
     *,
     device: str | torch.device = "cpu",
     log: Callable[[str], None] | None = print,
+    metadata: dict | None = None,
 ) -> dict:
     """Executa AdamW, clipping de gradientes e seleção pela perda de validação.
 
@@ -134,7 +158,7 @@ def fit(
     best_epoch = 0
     stale_epochs = 0
     history = []
-    metadata = {"training_config": asdict(config), "data": data.summary}
+    metadata = {**(metadata or {}), "training_config": asdict(config), "data": data.summary}
     save_checkpoint(
         checkpoint_path, model, data.tokenizer, epoch=0,
         validation_loss=best_validation_loss, metadata=metadata, optimizer=optimizer,
