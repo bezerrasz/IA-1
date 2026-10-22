@@ -2,7 +2,12 @@ import unittest
 
 import torch
 
-from src.attention import MultiHeadAttention
+from src.attention import (
+    CausalAttention,
+    MultiHeadAttention,
+    SelfAttention_v1,
+    SelfAttention_v2,
+)
 from src.transformer import FeedForwardNetwork, TransformerBlock
 
 
@@ -13,6 +18,14 @@ class TransformerTests(unittest.TestCase):
         )
         x = torch.randn(2, 5, 16)
         self.assertEqual(tuple(attention(x).shape), (2, 5, 16))
+
+    def test_sprint3_attention_classes_remain_compatible(self):
+        x = torch.randn(6, 8)
+        self.assertEqual(tuple(SelfAttention_v1(8, 4)(x).shape), (6, 4))
+        self.assertEqual(tuple(SelfAttention_v2(8, 4)(x).shape), (6, 4))
+
+        causal = CausalAttention(8, 4, context_length=6, dropout=0.0)
+        self.assertEqual(tuple(causal(x.unsqueeze(0)).shape), (1, 6, 4))
 
     def test_causal_attention_does_not_read_future_tokens(self):
         torch.manual_seed(7)

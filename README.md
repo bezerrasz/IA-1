@@ -96,6 +96,16 @@ generated_ids = model.generate(
 )
 ```
 
+## ✅ Integração da Sprint 3
+
+As classes didáticas da Sprint 3 permanecem disponíveis em
+`src/attention.py`: `SelfAttention_v1`, `SelfAttention_v2`,
+`CausalAttention` e `MultiHeadAttention`. A Multi-Head Attention usada pelo
+GPT mantém a assinatura compatível com os experimentos anteriores e adiciona
+validação de dimensões, máscara causal e suporte ao Transformer Block.
+
+O glossário correspondente está em `docs/glossario_capitulo3.md`.
+
 ## ✅ Entregáveis da Sprint 2
 
 - Leitura orientada do Capítulo 2 em `docs/leitura_orientada_capitulo2.md`;
