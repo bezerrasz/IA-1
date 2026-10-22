@@ -1,5 +1,9 @@
 # Treinamento e uso dos pesos aprendidos
 
+Este documento descreve o perfil original em inglês. A adaptação para português
+usa `--language pt` e está documentada em [portugues.md](portugues.md), com corpus
+e checkpoints próprios.
+
 Esta etapa acrescenta treinamento ao GPT da Sprint 4, reutilizando o
 tokenizador, o Dataset, os embeddings e os Transformer Blocks existentes.
 Os módulos continuam nas pastas `src/`, `experiments/`, `tests/` e `docs/`.

@@ -7,6 +7,7 @@ import json
 import platform
 import sys
 import time
+from dataclasses import replace
 from pathlib import Path
 
 import torch
@@ -16,8 +17,8 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.checkpoint import load_checkpoint
-from src.config import CORPUS_PATH, DEFAULT_SPRINT4_CONFIG, TrainingConfig
-from src.generation import generate_text
+from src.config import DEFAULT_SPRINT4_CONFIG, LANGUAGE_PROFILES, TrainingConfig
+from src.generation import generate_reply, generate_text
 from src.gpt import GPTModel
 from src.training import fit, prepare_training_data
 
@@ -27,11 +28,14 @@ def write_report(path: Path, result: dict) -> None:
 
     data = result["data"]
     lines = [
-        "# Resultado do treinamento inicial do GPT", "",
+        f"# Resultado do treinamento do GPT em {result['language_label']}", "",
         "Registro gerado por `experiments/treinar_gpt.py`. Este é um experimento",
         "adicional ao escopo da Sprint 4.", "",
         "## Configuração e dados", "",
         f"- Corpus: `{result['corpus']}`;",
+        f"- Origem: {result['corpus_origin']};",
+        f"- Tarefa: `{result['task']}`; normalização: `{result['normalization']}`;",
+        f"- Escopo da perda: `{data['loss_scope']}` (padding sempre ignorado);",
         f"- Dispositivo: `{result['device']}`; Python {result['python_version']}; "
         f"PyTorch {result['torch_version']}; {result['threads']} thread(s);",
         f"- Tempo observado: {result['elapsed_seconds']:.2f} segundos;",
@@ -63,7 +67,8 @@ def write_report(path: Path, result: dict) -> None:
         "", f"Melhor época: **{result['best_epoch']}**. Perda de validação: "
         f"**{result['best_validation_loss']:.4f}**.", "",
         "## Geração antes e depois", "",
-        "Mesma sequência inicial e seleção greedy nas duas execuções.", "",
+        "Mesma entrada e seleção greedy nas duas execuções. No modo de diálogo,",
+        "a entrada é formatada com os marcadores de usuário e assistente.", "",
         f"Prompt: `{result['prompt']}`", "", "Antes:", "", "```text",
         result["generation_before"], "```", "", "Depois (melhor checkpoint):", "",
         "```text", result["generation_after"], "```", "",
@@ -72,7 +77,7 @@ def write_report(path: Path, result: dict) -> None:
         "A validação usa um trecho separado e orienta a escolha do checkpoint e",
         "a parada antecipada. Se a perda de treino continuar caindo enquanto a",
         "validação piora, há sinal de sobreajuste.", "",
-        "O corpus é curto e em inglês. O modelo pode aprender repetições e",
+        f"O corpus é curto e em {result['language_label']}. O modelo pode aprender repetições e",
         "memorizar trechos; este resultado não o torna um assistente de conversa.",
         "Palavras exclusivas da validação viram `<|unk|>`, portanto parte da",
         "perda avalia esse marcador, e não a previsão da palavra original.", "",
@@ -85,33 +90,33 @@ def write_report(path: Path, result: dict) -> None:
 
 
 def main() -> None:
-    defaults = TrainingConfig()
-    architecture = DEFAULT_SPRINT4_CONFIG
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--corpus", type=Path, default=CORPUS_PATH)
-    parser.add_argument("--epochs", type=int, default=defaults.epochs)
-    parser.add_argument("--batch-size", type=int, default=defaults.batch_size)
-    parser.add_argument("--learning-rate", type=float, default=defaults.learning_rate)
-    parser.add_argument("--train-fraction", type=float, default=defaults.train_fraction)
-    parser.add_argument("--stride", type=int, default=defaults.stride)
-    parser.add_argument("--patience", type=int, default=defaults.patience)
-    parser.add_argument("--seed", type=int, default=defaults.seed)
-    parser.add_argument("--context-length", type=int, default=architecture.context_length)
-    parser.add_argument("--embedding-dim", type=int, default=architecture.embedding_dim)
-    parser.add_argument("--num-heads", type=int, default=architecture.num_heads)
-    parser.add_argument("--num-layers", type=int, default=architecture.num_layers)
-    parser.add_argument("--feed-forward-dim", type=int, default=architecture.feed_forward_dim)
+    parser.add_argument("--language", choices=tuple(LANGUAGE_PROFILES), default="en")
+    parser.add_argument("--corpus", type=Path)
+    parser.add_argument("--epochs", type=int)
+    parser.add_argument("--batch-size", type=int)
+    parser.add_argument("--learning-rate", type=float)
+    parser.add_argument("--train-fraction", type=float)
+    parser.add_argument("--stride", type=int)
+    parser.add_argument("--patience", type=int)
+    parser.add_argument("--seed", type=int)
+    parser.add_argument("--context-length", type=int)
+    parser.add_argument("--embedding-dim", type=int)
+    parser.add_argument("--num-heads", type=int)
+    parser.add_argument("--num-layers", type=int)
+    parser.add_argument("--feed-forward-dim", type=int)
     parser.add_argument("--dropout", type=float, default=0.1)
     parser.add_argument("--threads", type=int, default=1)
     parser.add_argument("--device", choices=("auto", "cpu", "cuda"), default="auto")
-    parser.add_argument("--prompt", default="I HAD always")
-    parser.add_argument("--checkpoint", type=Path,
-                        default=PROJECT_ROOT / "experiments" / "gpt_treinado.pt")
-    parser.add_argument("--metrics", type=Path,
-                        default=PROJECT_ROOT / "experiments" / "treinamento_metricas.json")
-    parser.add_argument("--report", type=Path,
-                        default=PROJECT_ROOT / "docs" / "resultados_treinamento.md")
+    parser.add_argument("--prompt")
+    parser.add_argument("--checkpoint", type=Path)
+    parser.add_argument("--metrics", type=Path)
+    parser.add_argument("--report", type=Path)
     args = parser.parse_args()
+    profile = LANGUAGE_PROFILES[args.language]
+    for name in ("corpus", "checkpoint", "metrics", "report", "prompt"):
+        if getattr(args, name) is None:
+            setattr(args, name, profile[name])
     if args.threads <= 0:
         parser.error("--threads deve ser maior que zero")
     if args.device == "cuda" and not torch.cuda.is_available():
@@ -121,21 +126,35 @@ def main() -> None:
         device = "cpu"
 
     try:
-        config = TrainingConfig(
-            epochs=args.epochs, batch_size=args.batch_size,
-            learning_rate=args.learning_rate, train_fraction=args.train_fraction,
-            stride=args.stride, patience=args.patience, seed=args.seed,
+        training_overrides = {
+            name: getattr(args, name) for name in (
+                "epochs", "batch_size", "learning_rate", "train_fraction", "stride", "patience", "seed"
+            ) if getattr(args, name) is not None
+        }
+        config = replace(TrainingConfig(), **{**profile["training"], **training_overrides})
+        architecture_overrides = {
+            name: getattr(args, name) for name in (
+                "context_length", "embedding_dim", "num_heads", "num_layers", "feed_forward_dim"
+            ) if getattr(args, name) is not None
+        }
+        architecture = replace(
+            DEFAULT_SPRINT4_CONFIG, **{**profile["architecture"], **architecture_overrides}
         )
         if not args.prompt.strip():
             raise ValueError("--prompt não pode ser vazio")
         torch.set_num_threads(args.threads)
         torch.manual_seed(config.seed)
         text = args.corpus.read_text(encoding="utf-8")
-        data = prepare_training_data(text, args.context_length, config)
+        data = prepare_training_data(
+            text, architecture.context_length, config,
+            normalization=profile["normalization"], special_tokens=profile["special_tokens"],
+            document_separator="<|endoftext|>" if profile["task"] == "dialogue" else None,
+            task=profile["task"],
+        )
         model = GPTModel(
-            vocab_size=len(data.tokenizer.str_to_int), context_length=args.context_length,
-            embedding_dim=args.embedding_dim, num_heads=args.num_heads,
-            num_layers=args.num_layers, feed_forward_dim=args.feed_forward_dim,
+            vocab_size=len(data.tokenizer.str_to_int), context_length=architecture.context_length,
+            embedding_dim=architecture.embedding_dim, num_heads=architecture.num_heads,
+            num_layers=architecture.num_layers, feed_forward_dim=architecture.feed_forward_dim,
             dropout=args.dropout,
         ).to(device)
     except (OSError, ValueError) as error:
@@ -147,16 +166,18 @@ def main() -> None:
         f"validacao: {data.summary['validation_tokens']} tokens; "
         f"vocabulario: {data.summary['vocab_size']}", flush=True,
     )
-    generation_before = generate_text(model, data.tokenizer, args.prompt, max_new_tokens=24)
+    generate = generate_reply if profile["task"] == "dialogue" else generate_text
+    generation_before = generate(model, data.tokenizer, args.prompt, max_new_tokens=40)
     started = time.perf_counter()
     result = fit(
         model, data, config, args.checkpoint, device=device,
         log=lambda message: print(message, flush=True),
+        metadata={"language": args.language, "task": profile["task"]},
     )
     elapsed = time.perf_counter() - started
     loaded = load_checkpoint(args.checkpoint, device)
-    generation_after = generate_text(
-        loaded.model, loaded.tokenizer, args.prompt, max_new_tokens=24
+    generation_after = generate(
+        loaded.model, loaded.tokenizer, args.prompt, max_new_tokens=40
     )
     result.update({
         "corpus": args.corpus.name, "device": device,
@@ -164,6 +185,13 @@ def main() -> None:
         "threads": args.threads, "parameter_count": model.parameter_count(),
         "elapsed_seconds": elapsed, "prompt": args.prompt,
         "generation_before": generation_before, "generation_after": generation_after,
+        "language": args.language, "language_label": profile["label"],
+        "task": profile["task"], "normalization": profile["normalization"],
+        "corpus_origin": (
+            "sintético didático, escrito para este repositório"
+            if args.language == "pt" and args.corpus.resolve() == profile["corpus"].resolve()
+            else "arquivo de texto indicado na configuração"
+        ),
     })
     args.metrics.parent.mkdir(parents=True, exist_ok=True)
     args.metrics.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n",

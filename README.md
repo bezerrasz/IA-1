@@ -123,6 +123,30 @@ O procedimento, as opções e as limitações estão em
 `docs/resultados_treinamento.md`. Os pesos binários e o JSON de métricas ficam
 locais, fora do versionamento.
 
+## Usar e treinar em português
+
+Para usar o checkpoint em português no modo interativo:
+
+```powershell
+.\.venv\Scripts\python.exe experiments\gerar_texto.py --language pt --interactive
+```
+
+Na primeira execução em outra máquina, produza os pesos com:
+
+```powershell
+.\.venv\Scripts\python.exe experiments\treinar_gpt.py --language pt
+```
+
+O perfil usa `corpus_portugues.txt`, um corpus sintético didático de perguntas
+e respostas, e salva `experiments/gpt_portugues.pt` sem substituir o modelo em
+inglês. Experimente `olá, tudo bem?` ou `O que você faz?`; essas perguntas estão
+nos dados de treinamento. A geração é feita pelo GPT e continua sujeita a erros
+e repetições. `/sair` encerra o modo interativo.
+
+Veja o procedimento, a origem dos dados e as limitações em
+[`docs/portugues.md`](docs/portugues.md). O treino gera
+`docs/resultados_treinamento_portugues.md`. Os pesos ficam locais, fora do Git.
+
 ## ✅ Integração da Sprint 3
 
 As classes didáticas da Sprint 3 permanecem disponíveis em
