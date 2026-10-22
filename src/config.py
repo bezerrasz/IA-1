@@ -43,3 +43,33 @@ class Sprint4Config:
 
 
 DEFAULT_SPRINT4_CONFIG = Sprint4Config()
+
+
+@dataclass(frozen=True)
+class TrainingConfig:
+    """Parâmetros de um primeiro treinamento pequeno, executável na CPU."""
+
+    epochs: int = 20
+    batch_size: int = 8
+    learning_rate: float = 0.0003
+    weight_decay: float = 0.01
+    train_fraction: float = 0.8
+    stride: int = 8
+    seed: int = 123
+    patience: int = 5
+    max_grad_norm: float = 1.0
+
+    def __post_init__(self) -> None:
+        import math
+
+        for name in ("epochs", "batch_size", "stride", "patience"):
+            if getattr(self, name) <= 0:
+                raise ValueError(f"{name} deve ser maior que zero")
+        if not 0 < self.train_fraction < 1:
+            raise ValueError("train_fraction deve estar no intervalo (0, 1)")
+        for name in ("learning_rate", "max_grad_norm"):
+            value = getattr(self, name)
+            if not math.isfinite(value) or value <= 0:
+                raise ValueError(f"{name} deve ser positivo e finito")
+        if not math.isfinite(self.weight_decay) or self.weight_decay < 0:
+            raise ValueError("weight_decay deve ser não negativo e finito")

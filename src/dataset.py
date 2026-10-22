@@ -17,12 +17,30 @@ class GPTDatasetV1(Dataset[tuple[torch.Tensor, torch.Tensor]]):
     """Cria janelas de contexto e alvos deslocados em um corpus."""
 
     def __init__(self, txt: str, tokenizer: Encoder, max_length: int, stride: int):
+        self._build_windows(tokenizer.encode(txt), max_length, stride)
+
+    @classmethod
+    def from_token_ids(
+        cls, token_ids: list[int], max_length: int, stride: int
+    ) -> "GPTDatasetV1":
+        """Cria janelas de IDs já codificados, sem tokenizar novamente.
+
+        Permite separar treino e validação antes de construir janelas, evitando
+        que uma amostra atravesse a fronteira entre os dois conjuntos.
+        """
+
+        dataset = cls.__new__(cls)
+        dataset._build_windows(token_ids, max_length, stride)
+        return dataset
+
+    def _build_windows(
+        self, token_ids: list[int], max_length: int, stride: int
+    ) -> None:
         if max_length <= 0:
             raise ValueError("max_length deve ser maior que zero")
         if stride <= 0:
             raise ValueError("stride deve ser maior que zero")
 
-        token_ids = tokenizer.encode(txt)
         if len(token_ids) < max_length + 1:
             raise ValueError(
                 "O texto precisa possuir pelo menos max_length + 1 tokens "

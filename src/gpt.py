@@ -34,7 +34,7 @@ class GPTConfig:
 
 
 class GPTModel(nn.Module):
-    """Modelo GPT sem treinamento, com logits e geração autoregressiva.
+    """Modelo GPT com logits e geração autoregressiva.
 
     A entrada possui forma ``[B, T]`` e contém Token IDs. A saída do `forward`
     possui forma ``[B, T, V]`, com um logit para cada token do vocabulário em

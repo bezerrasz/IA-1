@@ -13,3 +13,8 @@ env/
 .vscode/
 .idea/
 *.swp
+
+# Pesos e métricas locais de treinamento (o relatório legível fica em docs/)
+/experiments/*.pt
+/experiments/*.pt.*.tmp
+/experiments/treinamento_metricas.json
