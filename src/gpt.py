@@ -1,187 +1,251 @@
-"""Arquitetura GPT simplificada construída com os componentes do projeto."""
-
-from __future__ import annotations
-
-from dataclasses import dataclass
-
 import torch
-from torch import nn
+import torch.nn as nn
+import torch.nn.functional as F
+from attention import MultiHeadAttention
 
-try:
-    from .embeddings import InputEmbedding
-    from .transformer import TransformerBlock
-except ImportError:  # Permite importar o módulo diretamente a partir de src/.
-    from embeddings import InputEmbedding
-    from transformer import TransformerBlock
+GPT_CONFIG_124M = {
+    "vocab_size": 50257,    # Tamanho do vocabulário (tiktoken gpt2)
+    "context_length": 1024, # Tamanho máximo do contexto (Cap. 4)
+    "emb_dim": 768,         # Dimensão dos embeddings
+    "n_heads": 12,          # Número de cabeças de atenção
+    "n_layers": 12,         # Número de Transformer Blocks
+    "drop_rate": 0.1,       # Taxa de Dropout
+    "qkv_bias": False,      # Bias nas matrizes Query, Key e Value
+    "ff_mult": 4            # Multiplicador da camada oculta FeedForward (padrão 4x)
+}
 
-
-@dataclass(frozen=True)
-class GPTConfig:
-    """Hiperparâmetros necessários para construir um GPT pequeno."""
-
-    vocab_size: int
-    context_length: int
-    embedding_dim: int = 128
-    num_heads: int = 4
-    num_layers: int = 2
-    feed_forward_dim: int | None = None
-    dropout: float = 0.0
-    bias: bool = True
-
-    def __post_init__(self) -> None:
-        if self.feed_forward_dim is None:
-            object.__setattr__(self, "feed_forward_dim", 4 * self.embedding_dim)
-
-
-class GPTModel(nn.Module):
-    """Modelo GPT com logits e geração autoregressiva.
-
-    A entrada possui forma ``[B, T]`` e contém Token IDs. A saída do `forward`
-    possui forma ``[B, T, V]`, com um logit para cada token do vocabulário em
-    cada posição.
-    """
-
-    def __init__(
-        self,
-        vocab_size: int,
-        context_length: int,
-        embedding_dim: int = 128,
-        num_heads: int = 4,
-        num_layers: int = 2,
-        feed_forward_dim: int | None = None,
-        dropout: float = 0.0,
-        bias: bool = True,
-    ) -> None:
+# =====================================================================
+# SEÇÃO 4.1: ESQUELETO INICIAL (DUMMY)
+# =====================================================================
+class DummyGPTModel(nn.Module):
+    def __init__(self, cfg):
         super().__init__()
-        self.config = GPTConfig(
-            vocab_size=vocab_size,
-            context_length=context_length,
-            embedding_dim=embedding_dim,
-            num_heads=num_heads,
-            num_layers=num_layers,
-            feed_forward_dim=feed_forward_dim,
-            dropout=dropout,
-            bias=bias,
+        self.tok_emb = nn.Embedding(cfg["vocab_size"], cfg["emb_dim"])
+        self.pos_emb = nn.Embedding(cfg["context_length"], cfg["emb_dim"])
+        self.drop_emb = nn.Dropout(cfg["drop_rate"])
+        self.trf_blocks = nn.Sequential(
+            *[DummyTransformerBlock(cfg) for _ in range(cfg["n_layers"])]
         )
-        if self.config.vocab_size <= 0:
-            raise ValueError("vocab_size deve ser maior que zero")
-        if self.config.context_length <= 0:
-            raise ValueError("context_length deve ser maior que zero")
-        if self.config.num_layers <= 0:
-            raise ValueError("num_layers deve ser maior que zero")
+        self.final_norm = DummyLayerNorm(cfg["emb_dim"])
+        self.out_head = nn.Linear(cfg["emb_dim"], cfg["vocab_size"], bias=False)
 
-        self.token_position_embedding = InputEmbedding(
-            vocab_size=self.config.vocab_size,
-            context_length=self.config.context_length,
-            embedding_dim=self.config.embedding_dim,
+    def forward(self, in_idx):
+        batch_size, seq_len = in_idx.shape
+        tok_embeds = self.tok_emb(in_idx)
+        pos_embeds = self.pos_emb(torch.arange(seq_len, device=in_idx.device))
+        x = tok_embeds + pos_embeds
+        x = self.drop_emb(x)
+        x = self.trf_blocks(x)
+        x = self.final_norm(x)
+        logits = self.out_head(x)
+        return logits
+
+class DummyTransformerBlock(nn.Module):
+    def __init__(self, cfg):
+        super().__init__()
+    def forward(self, x):
+        return x
+
+class DummyLayerNorm(nn.Module):
+    def __init__(self, normalized_shape, eps=1e-5):
+        super().__init__()
+    def forward(self, x):
+        return x
+
+# =====================================================================
+# SEÇÕES 4.2 E 4.3: LAYERNORM, GELU E FEEDFORWARD NETWORK
+# =====================================================================
+class LayerNorm(nn.Module):
+    def __init__(self, emb_dim):
+        super().__init__()
+        self.eps = 1e-5
+        self.scale = nn.Parameter(torch.ones(emb_dim))
+        self.shift = nn.Parameter(torch.zeros(emb_dim))
+
+    def forward(self, x):
+        # x shape: (batch_size, seq_len, emb_dim)
+        mean = x.mean(dim=-1, keepdim=True)
+        var = x.var(dim=-1, keepdim=True, unbiased=False)
+        norm_x = (x - mean) / torch.sqrt(var + self.eps)
+        return self.scale * norm_x + self.shift
+
+class GELU(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, x):
+        return 0.5 * x * (1 + torch.tanh(
+            torch.sqrt(torch.tensor(2.0 / torch.pi)) *
+            (x + 0.044715 * torch.pow(x, 3))
+        ))
+
+class FeedForward(nn.Module):
+    def __init__(self, cfg):
+        super().__init__()
+        ff_mult = cfg.get("ff_mult", 4)
+        hidden_dim = ff_mult * cfg["emb_dim"]
+        self.layers = nn.Sequential(
+            nn.Linear(cfg["emb_dim"], hidden_dim), # Expande: (B, T, emb_dim) -> (B, T, 4*emb_dim)
+            GELU(),
+            nn.Linear(hidden_dim, cfg["emb_dim"]), # Comprime: (B, T, 4*emb_dim) -> (B, T, emb_dim)
         )
-        self.transformer_blocks = nn.ModuleList(
-            [
-                TransformerBlock(
-                    embedding_dim=self.config.embedding_dim,
-                    num_heads=self.config.num_heads,
-                    feed_forward_dim=self.config.feed_forward_dim,
-                    context_length=self.config.context_length,
-                    dropout=self.config.dropout,
-                    bias=self.config.bias,
-                )
-                for _ in range(self.config.num_layers)
-            ]
+
+    def forward(self, x):
+        return self.layers(x)
+
+# =====================================================================
+# SEÇÃO 4.5 (ENTREGÁVEL 2): TRANSFORMER BLOCK
+# =====================================================================
+class TransformerBlock(nn.Module):
+    def __init__(self, cfg):
+        super().__init__()
+        self.att = MultiHeadAttention(
+            d_in=cfg["emb_dim"],
+            d_out=cfg["emb_dim"],
+            context_length=cfg["context_length"],
+            num_heads=cfg["n_heads"],
+            dropout=cfg["drop_rate"],
+            qkv_bias=cfg["qkv_bias"]
         )
-        self.final_norm = nn.LayerNorm(self.config.embedding_dim)
-        self.lm_head = nn.Linear(
-            self.config.embedding_dim, self.config.vocab_size, bias=False
+        self.ff = FeedForward(cfg)
+        self.norm1 = LayerNorm(cfg["emb_dim"])
+        self.norm2 = LayerNorm(cfg["emb_dim"])
+        self.drop_shortcut = nn.Dropout(cfg["drop_rate"])
+
+    def forward(self, x):
+        # Bloco 1: Pre-LayerNorm -> Multi-Head Attention -> Dropout -> Conexão Residual
+        shortcut = x
+        x = self.norm1(x)
+        x = self.att(x)
+        x = self.drop_shortcut(x)
+        x = x + shortcut
+
+        # Bloco 2: Pre-LayerNorm -> FeedForward -> Dropout -> Conexão Residual
+        shortcut = x
+        x = self.norm2(x)
+        x = self.ff(x)
+        x = self.drop_shortcut(x)
+        x = x + shortcut
+        return x
+
+# =====================================================================
+# SEÇÃO 4.6 (ENTREGÁVEL 3): ARQUITETURA GPT COMPLETA
+# =====================================================================
+class GPTModel(nn.Module):
+    def __init__(self, cfg):
+        super().__init__()
+        self.tok_emb = nn.Embedding(cfg["vocab_size"], cfg["emb_dim"])
+        self.pos_emb = nn.Embedding(cfg["context_length"], cfg["emb_dim"])
+        self.drop_emb = nn.Dropout(cfg["drop_rate"])
+        
+        self.trf_blocks = nn.Sequential(
+            *[TransformerBlock(cfg) for _ in range(cfg["n_layers"])]
         )
+        self.final_norm = LayerNorm(cfg["emb_dim"])
+        self.out_head = nn.Linear(cfg["emb_dim"], cfg["vocab_size"], bias=False)
 
-    @classmethod
-    def from_config(cls, config: GPTConfig) -> "GPTModel":
-        """Constrói o modelo a partir de um `GPTConfig` explícito."""
+    def forward(self, in_idx):
+        # 1. Entrada in_idx: (batch_size, seq_len)
+        batch_size, seq_len = in_idx.shape
+        
+        # 2. Embeddings de token e posição: (batch_size, seq_len, emb_dim)
+        tok_embeds = self.tok_emb(in_idx)
+        pos_embeds = self.pos_emb(torch.arange(seq_len, device=in_idx.device))
+        x = tok_embeds + pos_embeds
+        x = self.drop_emb(x)
+        
+        # 3. Passagem pelos N Transformer Blocks: mantém (batch_size, seq_len, emb_dim)
+        x = self.trf_blocks(x)
+        
+        # 4. Normalização final e Language Model Head: (batch_size, seq_len, vocab_size)
+        x = self.final_norm(x)
+        logits = self.out_head(x)
+        return logits
 
-        return cls(**config.__dict__)
+# =====================================================================
+# SEÇÃO 4.7 (ENTREGÁVEL 4): INFERÊNCIA E GERAÇÃO AUTOREGRESSIVA
+# =====================================================================
+def generate_text_simple(model, idx, max_new_tokens, context_size):
+    for _ in range(max_new_tokens):
+        # Corta o contexto se exceder context_size suportado pelo pos_emb
+        idx_cond = idx[:, -context_size:]
+        
+        with torch.no_grad():
+            logits = model(idx_cond)
+        
+        # Foca apenas no último passo de tempo: (B, T, vocab_size) -> (B, vocab_size)
+        logits = logits[:, -1, :]
+        
+        # Converte logits em probabilidades via Softmax
+        probas = torch.softmax(logits, dim=-1)
+        
+        # Seleção Greedy (token com maior probabilidade): (B, 1)
+        idx_next = torch.argmax(probas, dim=-1, keepdim=True)
+        
+        # Concatena o token previsto ao contexto para a próxima iteração
+        idx = torch.cat((idx, idx_next), dim=1)
+    return idx
 
-    def forward(self, token_ids: torch.Tensor) -> torch.Tensor:
-        """Processa Token IDs e retorna logits com forma `[B, T, V]`."""
+def generate(model, idx, max_new_tokens, context_size, temperature=0.0, top_k=None, eos_id=None):
+    for _ in range(max_new_tokens):
+        idx_cond = idx[:, -context_size:]
+        with torch.no_grad():
+            logits = model(idx_cond)
+        logits = logits[:, -1, :]
 
-        if token_ids.ndim != 2:
-            raise ValueError("token_ids deve possuir forma [batch, sequence]")
-        if token_ids.shape[1] > self.config.context_length:
-            raise ValueError(
-                "A sequência excede o context_length configurado para o GPT"
+        if top_k is not None:
+            top_logits, _ = torch.topk(logits, top_k)
+            min_val = top_logits[:, -1]
+            logits = torch.where(
+                logits < min_val,
+                torch.tensor(float("-inf")).to(logits.device),
+                logits
             )
 
-        hidden_states = self.token_position_embedding(token_ids)
-        for block in self.transformer_blocks:
-            hidden_states = block(hidden_states)
-        hidden_states = self.final_norm(hidden_states)
-        return self.lm_head(hidden_states)
+        if temperature > 0.0:
+            logits = logits / temperature
+            probs = torch.softmax(logits, dim=-1)
+            idx_next = torch.multinomial(probs, num_samples=1)
+        else:
+            idx_next = torch.argmax(logits, dim=-1, keepdim=True)
 
-    def parameter_count(self, trainable_only: bool = True) -> int:
-        """Retorna o número de parâmetros do modelo."""
+        if eos_id is not None and idx_next == eos_id:
+            break
 
-        parameters = self.parameters()
-        if trainable_only:
-            return sum(parameter.numel() for parameter in parameters if parameter.requires_grad)
-        return sum(parameter.numel() for parameter in self.parameters())
+        idx = torch.cat((idx, idx_next), dim=1)
+    return idx
 
-    @torch.no_grad()
-    def generate(
-        self,
-        token_ids: torch.Tensor,
-        max_new_tokens: int,
-        temperature: float = 1.0,
-        top_k: int | None = None,
-        do_sample: bool = False,
-        eos_token_id: int | None = None,
-    ) -> torch.Tensor:
-        """Gera tokens anexando uma previsão ao contexto a cada iteração.
+# =====================================================================
+# CAPÍTULO 5 (ENTREGÁVEL 2): AVALIAÇÃO QUANTITATIVA (LOSS)
+# =====================================================================
+def calc_loss_batch(input_batch, target_batch, model, device):
+    input_batch, target_batch = input_batch.to(device), target_batch.to(device)
+    logits = model(input_batch)
+    # Achata os tensores para (batch_size * seq_len, vocab_size) e (batch_size * seq_len)
+    loss = F.cross_entropy(logits.flatten(0, 1), target_batch.flatten())
+    return loss
 
-        Quando `do_sample=False`, escolhe o maior logit (greedy decoding).
-        Quando `do_sample=True`, aplica temperatura e, opcionalmente, mantém
-        apenas os `top_k` logits antes de amostrar a distribuição resultante.
-        O contexto usado pelo modelo é sempre limitado à janela mais recente.
-        """
+def calc_loss_loader(data_loader, model, device, num_batches=None):
+    total_loss = 0.0
+    if len(data_loader) == 0:
+        return float("nan")
+    elif num_batches is None:
+        num_batches = len(data_loader)
+    else:
+        num_batches = min(num_batches, len(data_loader))
+        
+    for i, (input_batch, target_batch) in enumerate(data_loader):
+        if i < num_batches:
+            loss = calc_loss_batch(input_batch, target_batch, model, device)
+            total_loss += loss.item()
+        else:
+            break
+    return total_loss / num_batches
 
-        if token_ids.ndim != 2:
-            raise ValueError("token_ids deve possuir forma [batch, sequence]")
-        if token_ids.shape[1] == 0:
-            raise ValueError("a sequência inicial não pode ser vazia")
-        if max_new_tokens < 0:
-            raise ValueError("max_new_tokens não pode ser negativo")
-        if temperature <= 0:
-            raise ValueError("temperature deve ser maior que zero")
-        if top_k is not None and not 1 <= top_k <= self.config.vocab_size:
-            raise ValueError("top_k deve estar entre 1 e vocab_size")
-        if eos_token_id is not None and not 0 <= eos_token_id < self.config.vocab_size:
-            raise ValueError("eos_token_id deve ser um ID válido do vocabulário")
-
-        was_training = self.training
-        self.eval()
-        generated = token_ids.clone()
-        finished = torch.zeros(token_ids.shape[0], dtype=torch.bool, device=token_ids.device)
-        for _ in range(max_new_tokens):
-            context = generated[:, -self.config.context_length :]
-            logits = self(context)[:, -1, :]
-
-            if top_k is not None:
-                top_values, _ = torch.topk(logits, top_k, dim=-1)
-                cutoff = top_values[:, [-1]]
-                logits = logits.masked_fill(logits < cutoff, float("-inf"))
-
-            if do_sample:
-                probabilities = torch.softmax(logits / temperature, dim=-1)
-                next_token = torch.multinomial(probabilities, num_samples=1)
-            else:
-                next_token = torch.argmax(logits, dim=-1, keepdim=True)
-            if eos_token_id is not None:
-                next_token = next_token.masked_fill(finished[:, None], eos_token_id)
-                finished |= next_token.squeeze(1) == eos_token_id
-            generated = torch.cat((generated, next_token), dim=1)
-            if eos_token_id is not None and finished.all():
-                break
-
-        if was_training:
-            self.train()
-        return generated
-
-
-__all__ = ["GPTConfig", "GPTModel"]
+def evaluate_model(model, train_loader, val_loader, device, eval_iter):
+    model.eval()
+    with torch.no_grad():
+        train_loss = calc_loss_loader(train_loader, model, device, num_batches=eval_iter)
+        val_loss = calc_loss_loader(val_loader, model, device, num_batches=eval_iter)
+    model.train()
+    return train_loss, val_loss

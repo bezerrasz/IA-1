@@ -1,23 +1,3 @@
-# Arquivos compilados do Python e Cache
-__pycache__/
-*.py[cod]
-*$py.class
-
-# Ambientes Virtuais (se você for usar mais pra frente)
-venv/
-env/
+*.pth
 .venv/
-.env
-
-# Configurações do Editor (VS Code, etc)
-.vscode/
-.idea/
-*.swp
-
-# Pesos e métricas locais de treinamento (o relatório legível fica em docs/)
-/experiments/*.pt
-/experiments/*.pt.*.tmp
-/experiments/treinamento_metricas.json
-/experiments/treinamento_metricas_pt.json
-/experiments/treinamento_metricas_pt_v2.json
-/experiments/avaliacao_portugues_resultado.json
+__pycache__/
